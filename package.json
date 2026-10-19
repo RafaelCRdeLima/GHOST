@@ -27,7 +27,8 @@
     "fumaca": "sh tools/fumaca.sh",
     "recursos": "node tools/amalgamate.mjs --ts",
     "prebuild": "node tools/hash_core.mjs && node tools/amalgamate.mjs --ts",
-    "pretest": "node tools/hash_core.mjs",
+    "pretest": "node tools/hash_core.mjs && node tools/amalgamate.mjs --ts",
+    "pretypecheck": "node tools/amalgamate.mjs --ts",
     "teste7": "node tools/teste7.mjs"
   },
   "dependencies": {
