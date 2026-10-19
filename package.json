@@ -1,0 +1,50 @@
+{
+  "name": "ghost",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "Neutrino flavour propagation with a Chebyshev propagator for sparse Hermitian Hamiltonians",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RafaelCRdeLima/GHOST.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "hash": "node tools/hash_core.mjs",
+    "amalgamate": "node tools/amalgamate.mjs",
+    "nucleo": "make -C native test",
+    "wasm": "make -C native wasm",
+    "ci": "npm run hash && make -C native test && make -C native cxx-check && npm run typecheck && npm test && npm run build && npm run fumaca",
+    "fumaca": "sh tools/fumaca.sh",
+    "recursos": "node tools/amalgamate.mjs --ts",
+    "prebuild": "node tools/hash_core.mjs && node tools/amalgamate.mjs --ts",
+    "pretest": "node tools/hash_core.mjs",
+    "teste7": "node tools/teste7.mjs"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^4.7.0",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7",
+    "vitest": "^2.1.8"
+  }
+}

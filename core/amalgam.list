@@ -1,0 +1,40 @@
+# Ordem de concatenação do núcleo. FONTE DA VERDADE: tools/amalgamate.mjs lê
+# este arquivo, remove os #include "dae_*.h" internos e emite um único
+# tradutor. É o mesmo texto que vai para dentro do WASM e para dentro do .cpp
+# exportado — por isso o teste 7 compara o MESMO código sob dois compiladores,
+# e não duas implementações que podem divergir em silêncio.
+#
+# Cabeçalhos primeiro, na ordem de dependência; depois as unidades.
+dae_types.h
+dae_version.generated.h
+dae_rng.h
+dae_csr.h
+dae_bessel.h
+dae_cheb.h
+dae_ham.h
+dae_obs.h
+dae_graph.h
+dae_neutrino.h
+dae_numag.h
+dae_metrics.h
+dae_traj.h
+dae_spec.h
+dae_run.h
+dae_csv.h
+dae_types.c
+dae_rng.c
+dae_csr.c
+dae_bessel.c
+dae_cheb.c
+dae_ham.c
+dae_obs.c
+dae_graph.c
+dae_neutrino.c
+dae_numag.c
+dae_numag_janelas.c
+dae_numag_colisoes.c
+dae_metrics.c
+dae_traj.c
+dae_spec.c
+dae_run.c
+dae_csv.c

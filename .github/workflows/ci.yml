@@ -1,0 +1,86 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  nucleo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+
+      # O hash do núcleo é gerado, não escrito à mão. Se ele mudar aqui, é
+      # porque alguém editou core/ sem regenerar — e aí o spec.json deixaria
+      # de identificar o código que produziu o resultado.
+      - name: hash do nucleo em dia
+        run: |
+          node tools/hash_core.mjs
+          git diff --exit-code core/dae_version.generated.h
+
+      - name: testes de aceitacao
+        run: make -C native test
+
+      # O núcleo tem de compilar pelos dois caminhos: é o que garante que a
+      # amalgamação vira um .cpp válido sem uma segunda implementação.
+      - name: C99 e C++17
+        run: make -C native cxx-check
+
+      - name: ASan + UBSan
+        run: make -C native asan
+
+      # Vigia a regra de "zero estado global mutável", da qual depende o laço
+      # OpenMP sobre realizações do template exportado.
+      - name: ThreadSanitizer
+        run: make -C native tsan
+
+      - name: desempenho
+        run: make -C native bench
+
+  wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - uses: mymindstorm/setup-emsdk@v14
+        with: { version: latest }
+
+      # ACEITACAO 6. A tolerancia e 1e-14, mas o piso de 99% de identidade bit
+      # a bit e o que vigia o mecanismo: os dois alvos batem 100%, e cair para "dentro da
+      # tolerancia mas reassociado" tem de falhar, nao virar numero pior.
+      - name: teste 6 — WASM contra nativo
+        run: make -C native test6
+
+      # A suite inteira no alvo real. E o portao contra -ffast-math herdado por
+      # flag: t91_conventions exige p_alvo = NaN sem alvo.
+      - name: suite completa sob WASM + fronteira de memoria
+        run: make -C native wasm-test
+
+      - name: desempenho no alvo real
+        run: make -C native wasm-bench
+
+  interface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm }
+      - uses: mymindstorm/setup-emsdk@v14
+        with: { version: latest }
+      - run: npm ci
+      - name: modulo WASM
+        run: make -C native wasm
+      - run: npm run typecheck
+
+      # Fixtures do mapeamento sitio->texel e da paleta. Erro de interface nao
+      # aparece como numero errado, aparece como imagem plausivel: sao estes
+      # testes que atacam a transposicao e o colormap invertido diretamente.
+      - name: fixtures da interface
+        run: npm test
+
+      - run: npm run build
+
+      # Le os pixels de volta do canvas. Sem isto, mapa preto com series
+      # corretas passa despercebido.
+      - name: fumaca — o aplicativo abre, propaga e desenha
+        run: npm run fumaca

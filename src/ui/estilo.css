@@ -1,0 +1,260 @@
+/* estilo.css — identidade visual do Daedalus.
+ *
+ * REGRA FUNCIONAL, não decorativa: Azul Egeu identifica o
+ * laboratório interativo — números calculados localmente, no navegador, agora.
+ * Bronze identifica tudo que passou pelo ciclo de exportação e reimportação.
+ * Nenhum valor reimportado aparece em azul. Não reaproveite essa distinção
+ * para outra coisa.
+ *
+ * Todo valor numérico vai em IBM Plex Mono.
+ */
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+
+:root {
+  --dd-ink: #101A24;
+  --dd-aegean: #17557C;
+  --dd-bronze: #B5813C;
+  --dd-icarus: #E5A83F;
+  --dd-marble: #F3EFE5;
+  --dd-wax: #7C8892;
+  --dd-terracotta: #A8452C;
+  --dd-olive: #2F7D6A;
+
+  --dd-mode-lab: #17557C;
+  --dd-mode-lab-fg: #8FC2E4;
+  --dd-mode-export: #B5813C;
+  --dd-mode-export-fg: #E5A83F;
+
+  --dd-canvas: #0B1219;
+  --dd-panel: #17222E;
+  --dd-hairline: rgba(243, 239, 229, 0.12);
+  --dd-fg: #F3EFE5;
+  --dd-fg-muted: #9AA6B0;
+
+  --dd-font-display: "Space Grotesk", Inter, system-ui, sans-serif;
+  --dd-font-text: Inter, system-ui, sans-serif;
+  --dd-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--dd-canvas); color: var(--dd-fg);
+  font-family: var(--dd-font-text); font-size: 13px;
+}
+.mono, .num { font-family: var(--dd-font-mono); font-variant-numeric: tabular-nums; }
+
+/* Altura travada na viewport para que os filhos flex possam ENCOLHER: sem
+   min-height:0 nos pais, um flex-item nunca fica menor que o conteúdo e o mapa
+   não preenche coisa nenhuma. */
+.app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+/* ------------------------------------------------------------------ topo -- */
+.topo {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-bottom: 1px solid var(--dd-hairline);
+}
+.topo .marca { color: var(--dd-marble); display: block; }
+.topo .nome {
+  font-family: var(--dd-font-display); font-size: 15px; font-weight: 500;
+  letter-spacing: .16em; color: var(--dd-marble);
+}
+.selo {
+  font-size: 12px; padding: 3px 10px; border-radius: 99px;
+  background: rgba(23, 85, 124, .35); border: 1px solid #2C77A8;
+  color: var(--dd-mode-lab-fg);
+}
+.selo.exportado {
+  background: rgba(181, 129, 60, .25); border-color: var(--dd-bronze);
+  color: var(--dd-mode-export-fg);
+}
+.topo .arquivo { font-size: 11px; color: var(--dd-wax); }
+.espaco { flex: 1; }
+
+/* ---------------------------------------------------------------- corpo -- */
+.corpo { display: grid; grid-template-columns: minmax(0, 1fr) 288px; flex: 1; min-height: 0; }
+.palco { padding: 12px 14px; border-right: 1px solid var(--dd-hairline);
+         display: flex; flex-direction: column; gap: 8px; min-width: 0; min-height: 0; }
+
+/* O mapa toma a maior parte do palco; as series ficam com o resto. */
+.mapa { flex: 1 1 58%; min-height: 170px; display: flex; }
+.mapa canvas {
+  width: 100%; height: 100%; display: block;
+  border: 1px solid var(--dd-hairline); border-radius: 8px;
+  image-rendering: pixelated; cursor: crosshair; background: var(--dd-ink);
+}
+.vistas { display: flex; align-items: center; gap: 8px; }
+.vistas button {
+  font-size: 11px; padding: 4px 10px; font-family: var(--dd-font-mono);
+  color: var(--dd-fg-muted);
+}
+.vistas button.sel { border-color: #2C77A8; color: var(--dd-mode-lab-fg); background: rgba(23,85,124,.25); }
+.vistas .dica, .vistas .aviso { margin: 0; border: none; padding: 0; font-size: 10px; }
+
+.escala { display: flex; align-items: center; gap: 10px; }
+.escala .rampa { flex: 1; height: 10px; border-radius: 5px; }
+.escala span { font-family: var(--dd-font-mono); font-size: 10px; color: var(--dd-wax); }
+
+.transporte { display: flex; align-items: center; gap: 10px; }
+.transporte input[type=range] { flex: 1; accent-color: #2C77A8; }
+.transporte button { min-width: 34px; }
+
+/* --------------------------------------------------------------- painel -- */
+.painel { padding: 10px 12px; overflow-y: auto; min-height: 0; }
+
+/* ------------------------------------------------ secoes recolhiveis ---- */
+.secao { border: 1px solid var(--dd-hairline); border-radius: 8px; margin-bottom: 6px; }
+.secao .cabeca {
+  width: 100%; display: flex; align-items: baseline; gap: 8px; text-align: left;
+  background: none; border: none; border-radius: 8px; padding: 8px 10px;
+}
+.secao .cabeca:hover { background: rgba(243, 239, 229, .04); border-color: transparent; }
+.secao .seta { color: var(--dd-wax); font-size: 10px; }
+.secao .titulo { font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+                 color: var(--dd-fg-muted); }
+.secao .resumo { margin-left: auto; font-size: 10px; color: var(--dd-wax);
+                 white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.secao.aberta { background: rgba(23, 34, 46, .5); }
+.secao.aberta .titulo { color: var(--dd-mode-lab-fg); }
+.corpo-secao { padding: 0 10px 10px; }
+button.larga { width: 100%; margin-top: 10px; }
+.campo { display: flex; justify-content: space-between; align-items: baseline; margin: 12px 0 5px; }
+.campo label { font-size: 11px; letter-spacing: .08em; color: var(--dd-wax); }
+.campo .num { font-size: 11px; color: var(--dd-fg); }
+
+input, select {
+  width: 100%; background: var(--dd-ink); color: var(--dd-fg);
+  border: 1px solid var(--dd-hairline); border-radius: 8px;
+  padding: 6px 9px; font: inherit; font-size: 12px;
+}
+input[type=number] { font-family: var(--dd-font-mono); }
+input[type=range] { padding: 0; border: none; background: none; accent-color: #2C77A8; }
+input[type=checkbox] { width: auto; accent-color: #2C77A8; }
+.caixa { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--dd-fg-muted); margin: 8px 0; }
+
+.segmentado { display: flex; border: 1px solid var(--dd-hairline); border-radius: 8px; overflow: hidden; }
+.segmentado button {
+  flex: 1; border: none; border-radius: 0; background: none;
+  color: var(--dd-fg-muted); font-size: 12px; padding: 6px 0; cursor: pointer;
+}
+.segmentado button.sel { background: var(--dd-aegean); color: var(--dd-marble); }
+
+button {
+  background: var(--dd-panel); color: var(--dd-fg);
+  border: 1px solid var(--dd-hairline); border-radius: 8px;
+  padding: 6px 11px; font: inherit; font-size: 12px; cursor: pointer;
+}
+button:hover:not(:disabled) { border-color: #2C77A8; }
+button:disabled { opacity: .45; cursor: default; }
+button.primario { border-color: #2C77A8; color: var(--dd-mode-lab-fg); }
+
+/* Bronze = ciclo de exportação. A cor é o que distingue "calculado aqui" de
+   "saiu daqui / voltou de fora", e a distinção é funcional. */
+.exportar { display: flex; gap: 8px; margin-top: 10px; }
+.exportar button {
+  flex: 1; border-color: var(--dd-bronze); color: var(--dd-mode-export-fg);
+  background: rgba(181, 129, 60, .10); font-family: var(--dd-font-mono); font-size: 11px;
+}
+.exportar button:hover:not(:disabled) { background: rgba(181, 129, 60, .22); }
+
+.aviso {
+  font-size: 11px; color: var(--dd-icarus); margin: 8px 0 0; line-height: 1.4;
+  border-left: 2px solid var(--dd-icarus); padding-left: 8px;
+}
+.dica { font-size: 11px; color: var(--dd-wax); margin: 6px 0 0; line-height: 1.4; }
+.erro {
+  background: rgba(168, 69, 44, .18); border: 1px solid var(--dd-terracotta);
+  color: #F0A99A; padding: 8px 10px; border-radius: 8px; font-size: 12px;
+  font-family: var(--dd-font-mono); white-space: pre-wrap;
+}
+
+/* --------------------------------------------------------------- séries -- */
+/* ------------------------------------------------------------- series --- */
+.painel-series { flex: 1 1 42%; min-height: 150px; display: flex; flex-direction: column; gap: 4px; }
+.legenda-series {
+  display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  font-size: 11px; font-family: var(--dd-font-mono);
+}
+.legenda-series span { display: inline-flex; align-items: center; gap: 6px; }
+.legenda-series i { width: 14px; height: 2px; display: inline-block; }
+.legenda-series em { font-style: normal; opacity: .6; }
+.series {
+  flex: 1; min-height: 0; width: 100%; background: var(--dd-ink);
+  border: 1px solid var(--dd-hairline); border-radius: 8px;
+}
+.series .quadro { fill: none; stroke: var(--dd-hairline); }
+.series .grade { stroke: rgba(243, 239, 229, .06); stroke-width: 1;
+                 vector-effect: non-scaling-stroke; }
+.series .cursor { stroke: #2C77A8; stroke-width: 1; opacity: .85;
+                  vector-effect: non-scaling-stroke; }
+.series .marca { fill: var(--dd-wax); font-size: 11px; font-family: var(--dd-font-mono); }
+.series .rotulo { fill: var(--dd-fg-muted); font-size: 12px; font-family: var(--dd-font-mono); }
+
+/* ------------------------------------------------- painel de leitura ----
+   As metricas da rede ficam junto do mapa, em corpo legivel: sao os numeros
+   que se anota a cada varredura. O rodape fica com o DIAGNOSTICO (norma,
+   procedencia), que responde outra pergunta. */
+.metricas { display: flex; gap: 22px; flex-wrap: wrap; align-items: baseline;
+            padding: 4px 2px 2px; }
+.metrica { display: flex; flex-direction: column; gap: 1px; }
+/* SEM text-transform: os rótulos são símbolos, não palavras — maiusculizar
+   transforma ⟨d⟩ em ⟨D⟩, λ₂ em Λ₂ e α em A, que são outras grandezas. */
+.metrica .rot { font-size: 10px; letter-spacing: .08em; color: var(--dd-wax); }
+.metrica .val { font-family: var(--dd-font-mono); font-size: 17px; color: var(--dd-fg);
+                font-variant-numeric: tabular-nums; line-height: 1.15; }
+.metrica .nota { font-size: 10px; color: var(--dd-icarus); }
+.metrica.alerta .val { color: var(--dd-icarus); }
+
+/* -------------------------------------------------- rodapé de procedência --
+   A norma nunca sai da tela: é o único indicador que diz se o que está sendo
+   mostrado é confiável. Ver CONVENTIONS.md, parte 10.3. */
+.rodape {
+  display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: baseline;
+  padding: 8px 16px; border-top: 1px solid var(--dd-hairline);
+  font-family: var(--dd-font-mono); font-size: 10px; color: var(--dd-wax);
+}
+.rodape b { font-weight: 400; color: var(--dd-fg); }
+.rodape .alerta { color: var(--dd-icarus); }
+.rodape.ruim { color: var(--dd-terracotta); }
+.rodape.ruim b { color: var(--dd-terracotta); }
+
+.lingua { width: auto; font-size: 11px; padding: 3px 6px; color: var(--dd-fg-muted); }
+.botao-arquivo {
+  flex: 1; text-align: center; cursor: pointer;
+  border: 1px solid var(--dd-bronze); border-radius: 8px; padding: 6px 11px;
+  color: var(--dd-mode-export-fg); background: rgba(181, 129, 60, .10);
+  font-family: var(--dd-font-mono); font-size: 11px;
+}
+.botao-arquivo:hover { background: rgba(181, 129, 60, .22); }
+
+.transporte .num { white-space: nowrap; }
+.num.fraco { color: var(--dd-wax); font-size: 11px; }
+
+/* O tubo se gira arrastando, e o cursor precisa dizer isso antes do gesto:
+   uma figura 3D que ninguem sabe que gira e uma figura 2D confusa.
+   `image-rendering` volta ao padrao porque aqui os pontos sao redondos e
+   suavizados, nao texels de uma grade. */
+.mapa canvas.giravel {
+  cursor: grab; image-rendering: auto; touch-action: none;
+}
+.mapa canvas.giravel:active { cursor: grabbing; }
+
+/* Os dois modos de saida das trajetorias. Radio e nao caixa porque sao mutuamente
+   exclusivos, e o custo fica DENTRO do rotulo — ao lado da escolha, nao numa
+   nota de rodape que ninguem le antes de decidir. */
+.modos { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 4px; }
+.modo {
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 8px;
+  align-items: baseline; padding: 8px 10px; cursor: pointer;
+  border: 1px solid var(--dd-hairline); border-radius: 6px;
+}
+.modo:hover { border-color: var(--dd-mode-lab-fg); }
+.modo.sel { border-color: var(--dd-aegean); background: rgba(23, 85, 124, 0.16); }
+.modo input { grid-row: 1 / 3; align-self: center; }
+.modo_nome { font-weight: 500; }
+.modo_custo { grid-column: 2; font-size: .8125rem; color: var(--dd-icarus); }
+.modo_quando {
+  grid-column: 2; font-size: .75rem; color: var(--dd-fg-muted); line-height: 1.45;
+}

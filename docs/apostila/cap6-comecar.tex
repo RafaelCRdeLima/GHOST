@@ -1,0 +1,170 @@
+\chapter{Por onde começar}
+\markboth{Começar}{Começar}
+
+\section{Montar e rodar}
+
+\begin{verbatim}
+npm install
+make -C native test        # suite de aceitacao herdada: a rede de seguranca
+npm run wasm               # precisa do emsdk: source ~/emsdk/emsdk_env.sh
+npm test && npm run build
+
+./native/build/bin/ghost run specs/neutrino-vacuo.json --saida saida.csv
+\end{verbatim}
+
+Rode \cmd{make -C native test} antes de qualquer outra coisa, e rode de novo
+depois de cada mudança. É a suíte herdada do DAEDALUS e é o que impede que uma
+alteração na superfície quebre o núcleo em silêncio.
+
+\begin{nota}
+\rotulo{o spec.json é a moeda única}
+Um cálculo é descrito por um \cmd{spec.json}, e ele é analisado \emph{só em C}.
+Nada de montar hamiltoniano em Python: um script de figuras escreve o spec,
+chama o binário e desenha. Ele não calcula física.
+
+\medskip
+O cabeçalho de todo CSV carrega o \emph{hash do núcleo}. Um resultado do GHOST
+não pode ser confundido com um do DAEDALUS, nem reimportado como se fosse. É
+para isso que o campo existe: proveniência é conteúdo, não decoração.
+\end{nota}
+
+\section{Uma sequência de exercícios}
+
+Em ordem. Cada um usa o anterior.
+
+\begin{enumerate}
+\item \textbf{Dois sabores no vácuo.} Reproduza
+  $P = \sin^2 2\theta \sin^2(kL)$ e confirme o erro na casa $10^{-15}$. Se der
+  $10^{-8}$, algo está em precisão simples.
+
+\item \textbf{Varra o ângulo.} Refaça a figura da página~\pageref{cap:teoria}:
+  a profundidade do vale contra $\sin^2 2\theta$. Convença-se de que matéria
+  \emph{não} muda a mistura.
+
+\item \textbf{Ligue a matéria, densidade constante.} Encontre a ressonância
+  varrendo $\rho$ e verifique a equação~\eqref{eq:resonancia}. Veja a amplitude
+  ir de $0{,}117$ a $0{,}999$ com $\theta$ fixo.
+
+\item \textbf{Perfil exponencial.} Compare contra a fórmula de Petcov. Aqui
+  aparece pela primeira vez a questão do domínio de integração --- e, se você
+  errar o domínio, aparece também o erro de 26\%.
+
+\item \textbf{Três sabores com fase CP.} Passa a usar o mergulho real
+  $2n\times2n$. Compare contra \cmd{expm}.
+
+\item \textbf{Trajetórias.} Ligue a defasagem e recupere a solução exata de
+  Lindblad. Confira o traço: se não der $1{,}000000000000$, pare.
+\end{enumerate}
+
+\begin{alerta}
+\rotuloa{o erro que você vai cometer no exercício 4}
+Convergir olhando $P(\nue)$. Ela oscila e engana --- com 1500 fatias deu
+$0{,}0027$ contra os $0{,}0224$ corretos. A métrica é
+$|\braket{\nu_3}{\psi}|^2 \to 1$. Está no capítulo~\ref{cap:nucleo} e está
+repetido aqui porque é o erro mais caro do projeto.
+\end{alerta}
+
+\section{Bibliografia comentada}
+
+\subsection{Para entender o efeito}
+
+\begin{description}[leftmargin=0pt, itemsep=0.7ex]
+\item[Wolfenstein, 1978.] O potencial de matéria. Curto. Leia o argumento de
+  por que a corrente neutra não conta.
+\item[Mikheyev \& Smirnov, 1985.] A ressonância. O ponto não é a fórmula, é
+  perceber que densidade \emph{variável} é um problema diferente de densidade
+  constante.
+\item[Petcov, 1988; Kuo \& Pantaleone, 1989.] A fórmula fechada para o perfil
+  exponencial. É contra ela que o código se valida no exercício 4.
+\end{description}
+
+\subsection{Para entender o choque}
+
+\begin{description}[leftmargin=0pt, itemsep=0.7ex]
+\item[Schirato \& Fuller, 2002.] O choque quebra a adiabaticidade. O artigo
+  fundador desta linha.
+\item[Fogli et al., 2003.] A assinatura migra em energia: baixa primeiro,
+  depois alta. É o mapa em $(t,E)$, e é deles.
+\item[Tomàs et al., 2004.] Choque reverso, estrutura não monótona no tempo, e a
+  primeira menção de que a frente numérica precisa ser afiada.
+\item[Barger, Huber \& Marfatia, 2005.] Enunciam a prática do afiamento. Não
+  quantificam a ausência dela --- e é aí que fica o espaço.
+\item[Kneller \& Volpe, 2010; Kneller \& Mauney, 2013.] Os limiares de amplitude
+  para turbulência. Leia antes de propor qualquer coisa sobre turbulência.
+\end{description}
+
+\subsection{Para o setor escuro e NSI}
+
+Ver a seção~\ref{sec:setor-escuro}. Esta lista existe para evitar que a
+direção seja reproposta como se fosse nova.
+
+\begin{description}[leftmargin=0pt, itemsep=0.7ex]
+\item[Esteban-Pretel, Tomás \& Valle, 2007.] \emph{Probing non-standard
+  neutrino interactions with supernova neutrinos}, arXiv:0704.0032. \textbf{Leia
+  este primeiro.} NSI na propagação pelo envelope, conversão ressonante induzida
+  por NSI, e a passagem da onda de choque --- para NSI não-universais de poucos
+  por cento. É o trabalho que já ocupa o efeito.
+\item[Esteban-Pretel, Tomás \& Valle, 2009.] arXiv:0909.2196. O mesmo, em
+  interação com os efeitos coletivos.
+\item[Jana \& Porto, 2024.] \emph{Non-standard interactions of supernova
+  neutrinos and mass ordering ambiguity at DUNE}, arXiv:2407.06251. NSI inverte
+  os níveis de matéria e induz nova ressonância perto da protoestrela; é de onde
+  vem a sensibilidade $\mathcal{O}(0{,}1)$ marcada na
+  figura~\ref{fig:eps-nsi}.
+\item[Dutta \& Karthikeyan, 2025 (arXiv:2508.16558); Das \& Reno, 2025
+  (arXiv:2508.16510).] A variante escalar, por dois grupos no mesmo mês. Sinal
+  de área quente.
+\item[Sen, 2024.] \emph{Supernova Neutrinos: Flavour Conversion Mechanisms and
+  New Physics Scenarios}, arXiv:2405.20432. Revisão; o mapa do que está
+  ocupado.
+\item[Volpe, 2023.] \emph{Neutrinos from dense environments}, arXiv:2301.11814.
+  Revisão mais ampla, de mecanismos e abordagens teóricas.
+\item[Chang, Essig \& McDermott, 2016 (arXiv:1611.03864) e 2018
+  (arXiv:1803.00993).] Os vínculos de resfriamento da SN 1987A para fótons
+  escuros e setores escuros sub-GeV. É a via de resfriamento, feita com a
+  ferramenta certa.
+\item[Akita, Im, Masud \& Yun, 2023.] \emph{Limits on heavy neutral leptons,
+  $Z'$ bosons and majorons from high-energy supernova neutrinos},
+  arXiv:2312.13627. A via de decaimento, feita, e com exatamente este conteúdo
+  de partículas.
+\item[Farzan, 2015.] arXiv:1505.06906. Modelo de mediador leve que gera NSI
+  grande; a ponte entre um $Z'$ e o parâmetro $\varepsilon$.
+\item[Acero et al., 2022.] \emph{White paper on light sterile neutrino
+  searches}, arXiv:2203.07323. Onde o cenário HNL mais fóton escuro do
+  MiniBooNE está catalogado, com o espaço de parâmetros.
+\end{description}
+
+\subsection{Para o lado numérico}
+
+\begin{description}[leftmargin=0pt, itemsep=0.7ex]
+\item[\cmd{CONVENTIONS.md}, no próprio repositório.] Não é documentação de
+  apoio; é a regra. Um único núcleo, spec analisado só em C,
+  \cmd{-ffast-math} proibido, sem \cmd{\_Complex}, zero estado global,
+  reprodutibilidade bit a bit, limite espectral garantido.
+\end{description}
+
+\subsection{Os dados}
+
+\begin{description}[leftmargin=0pt, itemsep=0.7ex]
+\item[Garching Core-Collapse Supernova Archive.] Modelos 3D de
+  A.~Wongwathanarat em grade Yin-Yang. \textbf{Atenção:} o que é distribuído
+  publicamente são perfis promediados em ângulo, e a média destrói a frente por
+  um fator 18. Para este trabalho é preciso o raio individual.
+\end{description}
+
+\section{Uma última coisa}
+
+\begin{conceito}
+\rotuloc{se você lembrar de três coisas}
+\textbf{Uma.} O neutrino tem dois conjuntos de estados e eles discordam; tudo o
+mais é consequência.
+
+\smallskip
+\textbf{Duas.} Na ressonância, o que decide não é o ângulo de mistura, é a
+velocidade com que a densidade muda.
+
+\smallskip
+\textbf{Três.} O observável é o incoerente, e a métrica de convergência é
+$|\braket{\nu_3}{\psi}|^2$. As duas convenções que a física impôs ao código
+existem porque a alternativa produz números errados sem avisar.
+\end{conceito}

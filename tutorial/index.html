@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0B1219" />
+    <title>Daedalus — tutorial</title>
+    <link rel="stylesheet" href="/src/ui/tutorial.css" />
+  </head>
+  <body>
+    <header class="topo">
+      <a class="volta" href="/">
+        <svg width="20" height="20" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M19 19 V81 M19 19 H81 V81 H19 M19 34.5 H65.5 V65.5 H19 M19 50 H50"
+                fill="none" stroke="currentColor" stroke-width="9"
+                stroke-linecap="square" stroke-linejoin="miter" />
+        </svg>
+        <span class="nome">DAEDALUS</span>
+      </a>
+      <span class="espaco"></span>
+      <a class="volta mono" href="/">abrir o laboratório →</a>
+    </header>
+
+    <main>
+      <h1>Como ler o que o Daedalus mostra</h1>
+      <p class="chamada">
+        O programa propaga uma excitação sobre um grafo e desenha para onde ela vai.
+        Este texto é sobre as três coisas que mudam a leitura de um resultado — e que,
+        se ignoradas, produzem figuras bonitas e erradas.
+      </p>
+
+      <h2>1. A física, em um parágrafo</h2>
+      <p>
+        Uma excitação num espaço de Hilbert de dimensão <em>N</em> = número de vértices.
+        O Hamiltoniano é de salto: <code>H = −γA</code> (adjacência) ou <code>H = γL</code>
+        (laplaciana). A evolução é <code>|ψ(t)⟩ = exp(−iHt)|ψ(0)⟩</code>, calculada por
+        expansão de Chebyshev com produto matriz–vetor esparso — nunca por exponencial de
+        matriz densa, que em <code>N = 2600</code> custaria ~10¹¹ operações por chamada.
+        Tudo roda na sua máquina, dentro do navegador. Nada é enviado a lugar nenhum.
+      </p>
+
+      <h2>2. Duas disciplinas que não são detalhe de conforto</h2>
+
+      <h3>Religar, não acrescentar</h3>
+      <p>
+        Acrescentar arestas de longo alcance aumenta <code>|E|</code> e melhora o
+        transporte <strong>trivialmente</strong>. Se você comparar duas topologias com
+        números de arestas diferentes, o que estará medindo é o número de arestas.
+        Por isso o controle de conectividade <strong>religa</strong> por padrão, mantendo
+        <code>|E|</code> fixo. O modo de acréscimo existe, e a interface avisa quando ele
+        está ligado.
+      </p>
+
+      <h3>Fixar a escala de energia</h3>
+      <p>
+        Ao comparar topologias diferentes é preciso normalizar <code>‖H‖</code>, senão
+        “mais coerência” pode ser apenas “hopping maior”. A normalização vem ligada
+        (raio espectral ou grau médio); desligá-la é uma escolha explícita, registrada no
+        <code>spec.json</code>, e a interface avisa.
+      </p>
+
+      <h2>3. O que o rodapé está dizendo</h2>
+      <p>
+        A norma <code>Σ|ψ|²</code> fica permanentemente na tela porque é o único indicador
+        que responde “o que estou vendo é confiável?”. Ela deve valer 1. O desvio aparece
+        ao lado, em notação científica; se passar de <code>10⁻⁹</code>, o rodapé inteiro
+        fica vermelho e o resultado não deve ser usado.
+      </p>
+      <p>
+        <code>λ₂</code> é o valor de Fiedler da laplaciana, e vem com um aviso quando
+        <strong>não convergiu</strong>. Isso importa: rede fortemente modular tem
+        <code>λ₂ → 0</code>, que é exatamente o regime de convergência mais lenta. Quando
+        o aviso aparece, o número mostrado é um <strong>limite superior</strong>, não uma
+        medida — e um platô numérico é indistinguível de um platô físico se você olhar só
+        a curva.
+      </p>
+      <p>
+        <code>α = a·Δt</code> é o argumento que a ordem da expansão de Chebyshev usa.
+        Ele aparece no rodapé porque a grade de tempo o move: grade fina com
+        <code>H</code> normalizada dá <code>α</code> pequeno, grade grossa sem normalizar
+        dá <code>α</code> grande.
+      </p>
+
+      <h2>4. O mapa</h2>
+      <p>
+        Para o microtúbulo, o mapa é a rede desenrolada: <code>N∥</code> colunas ao longo
+        do eixo, <code>N⊥</code> linhas (protofilamentos). A escala de cor tem luminância
+        monotônica, de propósito — a figura sobrevive à impressão em escala de cinza.
+      </p>
+      <p>
+        Para grafos sem rede desenrolada (blocos estocásticos, hipercubo, lista de
+        arestas importada), o mapa mostra os sítios em <strong>ordem de índice</strong>,
+        dobrados em linhas, e a interface diz isso. Não é a geometria do grafo, e tratá-lo
+        como se fosse é o erro mais fácil de cometer aqui.
+      </p>
+
+      <h3>A costura do microtúbulo</h3>
+      <p>
+        <code>seam_shift = 0</code> é o cilindro periódico ideal. <code>seam_shift = 3</code>
+        é o deslocamento helicoidal realista: o sítio <code>(m, 12)</code> liga com
+        <code>(m+3, 0)</code>. Com as pontas abertas — o padrão, porque o microtúbulo real
+        tem extremidades abertas e inequivalentes — três arestas de costura são descartadas
+        em cada extremidade, <strong>em protofilamentos diferentes</strong>. As duas pontas
+        deixam de ser equivalentes, e isso é a física, não um defeito da montagem.
+      </p>
+
+      <h2>5. Exportar e reimportar</h2>
+      <p>
+        Rede grande ou varredura longa não roda aqui: o programa <strong>emite código</strong>.
+        O <code>.cpp</code> é autocontido, compila com
+        <code>g++ -O3 -fopenmp daedalus_run.cpp -o run</code> sem instalar nada, e
+        <strong>regenera</strong> a rede a partir do <code>spec.json</code> embutido.
+        O <code>.wl</code> e o <code>.py</code> <strong>recebem</strong> a lista de arestas
+        e propagam por diagonalização exata: eles são oráculo de verificação do propagador,
+        não caminho de produção.
+      </p>
+      <p>
+        Todo arquivo emitido carrega, no cabeçalho, o <code>spec.json</code> canônico, o
+        hash do núcleo e a impressão digital do grafo. É esse par
+        <em>(spec, hash do núcleo)</em> que torna um resultado reproduzível — o spec
+        sozinho não basta, porque o núcleo muda.
+      </p>
+      <p>
+        O CSV que volta do cluster pode ser arrastado de volta para a página. Ele só é
+        plotado se trouxer a procedência, e as colunas são lidas <strong>por nome</strong>,
+        nunca por posição. Se o hash do núcleo do arquivo não bater com o que está
+        rodando, o programa avisa na tela e marca o painel em bronze: os números continuam
+        válidos, mas este binário não os reproduz.
+      </p>
+
+      <h2>6. As cores dizem de onde veio o número</h2>
+      <p>
+        <span class="pastilha azul">Azul Egeu</span> identifica o que foi calculado aqui,
+        agora, localmente. <span class="pastilha bronze">Bronze</span> identifica tudo que
+        passou pelo ciclo de exportação e reimportação. Nenhum valor reimportado aparece
+        em azul. A distinção é funcional, não decorativa.
+      </p>
+
+      <footer>
+        <p class="mono">
+          Daedalus roda inteiro no navegador. Nenhum dado sai da sua máquina.
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>

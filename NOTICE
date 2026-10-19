@@ -1,0 +1,43 @@
+GHOST — third-party attributions
+
+The numerical core (core/) and the command-line program (native/) are written
+from scratch and link no third-party library. The entries below credit
+ALGORITHMS and REFERENCE DATA, not copied code, followed by the third-party
+packages that the web app and the Manual bundle.
+
+--------------------------------------------------------------------------------
+
+xoshiro256++ and splitmix64  (core/dae_rng.c)
+
+  Algorithms by David Blackman and Sebastiano Vigna, dedicated to the public
+  domain (CC0). https://prng.di.unimi.it/
+  The implementation in core/dae_rng.c was written from the published
+  description of the algorithms.
+
+Miller's backward recurrence  (core/dae_bessel.c)
+
+  Classical method for Bessel functions of the first kind, normalised by
+  J_0(x) + 2 sum_m J_2m(x) = 1. Described in Abramowitz & Stegun, Handbook of
+  Mathematical Functions, §9.12, and in Press et al., Numerical Recipes, ch. 6.
+
+Bessel reference table  (native/tests/t00_bessel_table.c)
+
+  Values generated with the Wolfram Language (BesselJ, 30 digits, exact
+  rational arguments) and checked independently against mpmath. Test data only;
+  not part of the built program.
+
+--------------------------------------------------------------------------------
+
+Web app (src/), bundled at build time from npm
+
+  React, React DOM                         MIT License
+  @fontsource/inter                        SIL Open Font License 1.1
+  @fontsource/ibm-plex-mono                SIL Open Font License 1.1
+  @fontsource/space-grotesk                SIL Open Font License 1.1
+
+  Each package ships its own license text in node_modules/ after npm install.
+
+Manual (docs/apostila/fontes/)
+
+  Newsreader, Manrope and DM Mono         SIL Open Font License 1.1
+  The license texts are in docs/apostila/fontes/OFL-*.txt.

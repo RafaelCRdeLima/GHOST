@@ -1,0 +1,11 @@
+{
+  "format_version": 2, "seed": 1,
+  "graph": { "generator": "edgelist", "n": 2,
+             "edges": [[0,0,0.93969262078591], [1,1,-0.93969262078591],
+                       [0,1,-0.34202014332567]] },
+  "hamiltonian": { "kind": "adjacency", "gamma": 1.0, "normalization": "none" },
+  "initial": { "site": 0 },
+  "time": { "t1": 6.283185307179586, "nt": 60 },
+  "observables": { "target": 1, "population": false },
+  "realizations": 1
+}

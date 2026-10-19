@@ -1,0 +1,401 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 15.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     20010,        392]
+NotebookOptionsPosition[     14577,        323]
+NotebookOutlinePosition[     14942,        339]
+CellTagsIndexPosition[     14899,        336]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["Daedalus \[LongDash] caminhadas qu\[AHat]nticas em Wolfram Language", \
+"Title",ExpressionUUID->"c776a93f-e637-4e3e-8a0b-0d4e51e96c2b"],
+
+Cell["\<\
+Este caderno \[EAcute] o convite; o conte\[UAcute]do est\[AAcute] em \
+Daedalus.wl, que \[EAcute] onde se mexe. Aqui cada se\[CCedilla]\[ATilde]o \
+mostra uma pe\[CCedilla]a do pacote funcionando, na ordem em que se costuma \
+precisar delas.\
+\>", "Text",ExpressionUUID->"8cae507d-3264-4316-9509-b73dd391c826"],
+
+Cell["\<\
+O pacote \[EAcute] AUT\[CapitalOHat]NOMO: gera a rede a partir dos \
+par\[AHat]metros, propaga, calcula os observ\[AAcute]veis e escreve o mesmo \
+CSV do n\[UAcute]cleo em C. N\[ATilde]o h\[AAcute] biblioteca compilada, n\
+\[ATilde]o h\[AAcute] LibraryLink, n\[ATilde]o h\[AAcute] caixa-preta \
+\[LongDash] o programa inteiro est\[AAcute] \[AGrave] vista.\
+\>", "Text",ExpressionUUID->"d7c3ca7f-77cf-49ec-9258-55e36c107127"],
+
+Cell["\<\
+E ele n\[ATilde]o \[EAcute] uma tradu\[CCedilla]\[ATilde]o do n\[UAcute]cleo. \
+O n\[UAcute]cleo propaga por expans\[ATilde]o de Chebyshev; aqui a propaga\
+\[CCedilla]\[ATilde]o \[EAcute] por decomposi\[CCedilla]\[ATilde]o espectral, \
+e por Krylov quando N cresce. A diferen\[CCedilla]a \[EAcute] deliberada: \
+dois programas que rodam o mesmo algoritmo podem compartilhar o mesmo erro \
+conceitual, e a concord\[AHat]ncia entre eles n\[ATilde]o provaria nada. \
+\[CapitalEAcute] essa diferen\[CCedilla]a que transforma \"os n\[UAcute]meros \
+batem\" em evid\[EHat]ncia.\
+\>", "Text",ExpressionUUID->"5ba1452a-e4ac-40bb-9a5b-9730739ee749"],
+
+Cell["1. Carregar o pacote", "Section",ExpressionUUID->"93408cff-6ae7-40b5-add1-280e98dfaff4"],
+
+Cell["Ajuste o diret\[OAcute]rio para onde est\[AAcute] Daedalus.wl.", "Text",ExpressionUUID->"4a82ff17-fe93-4c3c-a8e6-ea49567d8bc7"],
+
+Cell["\<\
+SetDirectory[NotebookDirectory[]];
+Get[\"Daedalus.wl\"]\
+\>", "Input",ExpressionUUID->"3c5d7496-ea51-41f6-9c49-16687acfd61b"],
+
+Cell["?Daedalus`*", "Input",ExpressionUUID->"cf805ae2-a7ca-482d-9de8-477e0f5037ad"],
+
+Cell["2. Um resultado inteiro, em uma linha", "Section",ExpressionUUID->"414a3564-0018-4a5e-a4a1-2a7717a94fb2"],
+
+Cell["\<\
+DaedalusRodar faz tudo: rede, m\[EAcute]tricas, hamiltoniano, propaga\
+\[CCedilla]\[ATilde]o e observ\[AAcute]veis. Comece pelos padr\[OTilde]es do \
+n\[UAcute]cleo e mude o que interessar.\
+\>", "Text",ExpressionUUID->"690fb616-b68d-4ac4-9a79-f0ac093a9a4c"],
+
+Cell["\<\
+Se este caderno veio exportado da interface, o arquivo daedalus_spec.json ao \
+lado traz exatamente o spec que estava na tela. Sem ele, come\[CCedilla]a-se \
+pelos padr\[OTilde]es do n\[UAcute]cleo.\
+\>", "Text",ExpressionUUID->"81c33119-6001-4025-869e-75915b916349"],
+
+Cell["\<\
+espec = If[FileExistsQ[\"daedalus_spec.json\"],
+   DaedalusEspecLer[\"daedalus_spec.json\"], DaedalusEspecPadrao[]];
+espec[\"graph\"][\"params\"]\
+\>", "Input",ExpressionUUID->"7a7e352b-44a6-440c-bf69-531f4842f805"],
+
+Cell["\<\
+r = DaedalusRodar[espec];
+Keys[r]\
+\>", "Input",ExpressionUUID->"bd98c44d-51af-4365-976c-f73d6fdcdd3c"],
+
+Cell["\<\
+{r[\"Rede\"][\"N\"], r[\"Rede\"][\"Digital\"]}
+r[\"Metricas\"]\
+\>", "Input",ExpressionUUID->"431cded1-1922-43f1-a509-3e261ccf4ff7"],
+
+Cell["3. A rede vem dos par\[AHat]metros, n\[ATilde]o de uma lista de \
+arestas", "Section",ExpressionUUID->"ab0f85aa-f296-4934-bccb-21fbd95a3d5a"],
+
+Cell["\<\
+Isto importa: uma lista pronta seria um dado, e um dado n\[ATilde]o se mexe. \
+O gerador \[EAcute] c\[OAcute]digo, e est\[AAcute] em Daedalus.wl para ser \
+alterado. seam_shift \[EAcute] o passo da costura do microt\[UAcute]bulo \
+\[LongDash] muda a topologia sem mudar |V| nem |E|, que \[EAcute] exatamente \
+o tipo de mudan\[CCedilla]a invis\[IAcute]vel a qualquer confer\[EHat]ncia de \
+tamanho.\
+\>", "Text",ExpressionUUID->"f5a57b35-eca1-441c-8d7c-f544e417730b"],
+
+Cell["\<\
+rede = DaedalusRede[espec];
+MatrixPlot[Normal[rede[\"A\"]], FrameTicks -> None, PlotLabel -> \"adjac\
+\[EHat]ncia\"]\
+\>", "Input",ExpressionUUID->"2c674a34-2779-4112-a4cf-20695ace11e3"],
+
+Cell["\<\
+A impress\[ATilde]o digital \[EAcute] FNV-1a de 64 bits sobre a estrutura \
+CSR, os bits IEEE-754 dos pesos e a parti\[CCedilla]\[ATilde]o em \
+m\[OAcute]dulos. \[CapitalEAcute] id\[EHat]ntica \[AGrave] do n\[UAcute]cleo, \
+e \[EAcute] a primeira coisa que a verifica\[CCedilla]\[ATilde]o compara: \"o \
+gerador discordou\" e \"o propagador discordou\" se corrigem em lugares \
+diferentes, e sem a digital as duas chegam como \"os n\[UAcute]meros n\
+\[ATilde]o batem\".\
+\>", "Text",ExpressionUUID->"2e745193-4394-4614-a3bd-4d3797488d6c"],
+
+Cell["\<\
+Table[Module[{e = espec},
+   e[\"graph\"][\"params\"][\"seam_shift\"] = s;
+   {s, DaedalusRede[e][\"Digital\"]}], {s, 0, 3}] // TableForm\
+\>", "Input",ExpressionUUID->"e7d98810-941c-41a9-951e-5756bb115524"],
+
+Cell["4. Duas disciplinas metodol\[OAcute]gicas, ligadas por padr\[ATilde]o", \
+"Section",ExpressionUUID->"7841e955-8065-4b3f-bbce-e80f69e6ff7a"],
+
+Cell["\<\
+conn_mode = \"rewire\" RELIGA mantendo |E| fixo, em vez de acrescentar \
+arestas. Acrescentar mudaria a conectividade m\[EAcute]dia junto com a \
+desordem, e a\[IAcute] n\[ATilde]o se sabe qual das duas produziu o efeito \
+observado.\
+\>", "Text",ExpressionUUID->"87ee43a1-b3aa-4269-a984-3bec1ebf17b0"],
+
+Cell["\<\
+normalization = \"spectral\" divide H pelo seu raio espectral, de modo que \
+\[Gamma]t signifique a mesma coisa em redes diferentes. Sem isso, comparar \
+dois grafos \[EAcute] comparar dois rel\[OAcute]gios que andam em ritmos \
+diferentes.\
+\>", "Text",ExpressionUUID->"a6aebb42-2319-49db-aa93-1b95f6d9f972"],
+
+Cell["\<\
+Module[{e = espec},
+  e[\"graph\"][\"params\"][\"ws_p\"] = 0.2;
+  Table[e[\"graph\"][\"params\"][\"conn_mode\"] = m;
+    {m, DaedalusRede[e][\"CSR\"][\"NNZ\"]/2}, {m, {\"rewire\", \"add\"}}]] // \
+TableForm\
+\>", "Input",ExpressionUUID->"85666e85-8005-492d-b44b-a87d8a16240f"],
+
+Cell["5. O hamiltoniano", "Section",ExpressionUUID->"d04dae90-0752-48c5-956c-4b305100cba1"],
+
+Cell["\<\
+ham = DaedalusHamiltoniano[rede, espec];
+{ham[\"Escala\"], ham[\"EscalaExata\"]}\
+\>", "Input",ExpressionUUID->"02e2584d-8bdf-4fe8-b066-edc51e9fdebf"],
+
+Cell["\<\
+A escala aqui \[EAcute] o raio espectral EXATO. O n\[UAcute]cleo usa poucos \
+passos de Lanczos com margem, e obt\[EAcute]m um valor maior que o \
+verdadeiro. Os dois discordam por constru\[CCedilla]\[ATilde]o, e a verifica\
+\[CCedilla]\[ATilde]o reporta a diferen\[CCedilla]a em vez de exigir \
+igualdade \[LongDash] impondo a escala do n\[UAcute]cleo quando quer comparar \
+o propagador sem que a diferen\[CCedilla]a de norma contamine todas as \
+colunas.\
+\>", "Text",ExpressionUUID->"6bbb1ec1-1be6-4ff9-b6a2-ee73d9f6e2f7"],
+
+Cell["6. Propagar: dois m\[EAcute]todos, e a compara\[CCedilla]\[ATilde]o \
+entre eles", "Section",ExpressionUUID->"7527e975-7c9b-4342-af42-b355ffebced2"],
+
+Cell["\<\
+esp = DaedalusPropagar[ham, espec, Method -> \"Espectral\"];
+kry = DaedalusPropagar[ham, espec, Method -> \"Krylov\"];
+Max[Abs[Last[esp[\"Estados\"]] - Last[kry[\"Estados\"]]]]\
+\>", "Input",ExpressionUUID->"3e252829-dea9-42bd-afdc-19234cecacd4"],
+
+Cell["\<\
+Espectral usa Eigensystem e soma exata sobre autovalores; Krylov usa \
+MatrixExp[-I H dt, \[Psi]], que aplica a exponencial ao vetor sem formar a \
+matriz. O primeiro \[EAcute] leg\[IAcute]vel, o segundo escala. Method -> \
+Automatic escolhe pela ordem da matriz.\
+\>", "Text",ExpressionUUID->"ef03d43b-b673-4a27-92d9-98345ba77123"],
+
+Cell["N\[ATilde]o h\[AAcute] Chebyshev aqui, de prop\[OAcute]sito.", "Text",ExpressionUUID->"a3143d8e-1812-4a63-94b3-9faf439fbba4"],
+
+Cell["7. Observ\[AAcute]veis", "Section",ExpressionUUID->"8aeb97c4-3748-4b61-8ddc-d1267e11abb4"],
+
+Cell["\<\
+obs = DaedalusObservaveis[esp, rede, espec];
+Keys[obs]\
+\>", "Input",ExpressionUUID->"4798de34-399d-47c2-87a8-e6072eade5a4"],
+
+Cell["\<\
+ListLinePlot[{Transpose[{esp[\"Tempos\"], obs[\"IPR\"]}],
+   Transpose[{esp[\"Tempos\"], obs[\"CoerenciaL1\"]/rede[\"N\"]}]},
+  PlotLegends -> {\"IPR\", \"coer\[EHat]ncia \[ScriptL]1 / N\"},
+  AxesLabel -> {\"\[Gamma]t\", None}, PlotRange -> All]\
+\>", "Input",ExpressionUUID->"baf87dfd-31ee-47d7-8c00-ab07cbef6969"],
+
+Cell["\<\
+Sem s\[IAcute]tio-alvo, PAlvo \[EAcute] Missing[\"NotAvailable\"], nunca \
+zero. Zero \[EAcute] valor fisicamente v\[AAcute]lido, e no gr\[AAcute]fico \
+seria plotado como se fosse dado.\
+\>", "Text",ExpressionUUID->"1404aa49-49a6-4d02-93d2-4fd6df8856e1"],
+
+Cell["\<\
+ArrayPlot[Transpose[obs[\"Populacao\"]], ColorFunction -> \"SunsetColors\",
+  FrameLabel -> {\"passo\", \"s\[IAcute]tio\"}, AspectRatio -> 1/2, Frame -> \
+True]\
+\>", "Input",ExpressionUUID->"c4d1a686-47cc-491c-b5a7-c4c3a0556634"],
+
+Cell["8. Concurrence por m\[OAcute]dulo", "Section",ExpressionUUID->"08f50a15-d1c2-47f0-b1e5-f7dd84171b12"],
+
+Cell["\<\
+A conven\[CCedilla]\[ATilde]o \[EAcute] C_MM = s_M\.b2 \[Minus] q_M na \
+diagonal e C_MN = 2 s_M s_N fora dela, com s_M = \
+\[CapitalSigma]_{j\[Element]M} |\[Psi]_j| e q_M = \
+\[CapitalSigma]_{j\[Element]M} |\[Psi]_j|\.b2. A soma sobre M \[LessEqual] N \
+reconstroi exatamente a coer\[EHat]ncia \[ScriptL]1, e essa identidade \
+\[EAcute] conferida entre as companheiras da se\[CCedilla]\[ATilde]o 11 \
+\[LongDash] se ela n\[ATilde]o fecha, a decomposi\[CCedilla]\[ATilde]o por m\
+\[OAcute]dulo n\[ATilde]o \[EAcute] decomposi\[CCedilla]\[ATilde]o de coisa \
+nenhuma.\
+\>", "Text",ExpressionUUID->"d28c20c0-4d14-42cd-b1da-a587c1c80dde"],
+
+Cell["MatrixForm[Last[obs[\"ConcurrencePorModulo\"]]]", "Input",ExpressionUUID->"3b7ebc5d-e9b9-47ef-88c0-8dd4a67b2401"],
+
+Cell["9. Varredura na fra\[CCedilla]\[ATilde]o religada", "Section",ExpressionUUID->"269794db-a06d-42a9-977c-cb538df7c0a3"],
+
+Cell["\<\
+M\[EAcute]dia TEMPORAL de p_alvo, n\[ATilde]o valor final: o valor final \
+oscila, e uma curva de valores finais mede a fase do rel\[OAcute]gio junto \
+com a f\[IAcute]sica.\
+\>", "Text",ExpressionUUID->"feb276c8-7bb1-4ab0-a262-4dfe7d2feeef"],
+
+Cell["\<\
+v = DaedalusVarredura[espec, {0., 0.5, 6}, 3];
+ListPlot[Transpose[{v[[All, \"p\"]], v[[All, \"Media\"]]}],
+  AxesLabel -> {\"p\", \"\:27e8p_alvo\:27e9_t\"}, PlotRange -> All, Joined -> \
+True, Mesh -> All]\
+\>", "Input",ExpressionUUID->"f68bd5c2-b140-4fed-8db9-1a0749372921"],
+
+Cell["10. Escrever o CSV e reimportar na interface", "Section",ExpressionUUID->"4612e106-4564-4a03-8ce9-d7b7d14e9a7e"],
+
+Cell["\<\
+O CSV sai no mesmo formato do n\[UAcute]cleo, com o spec can\[OHat]nico e o \
+core_hash no cabe\[CCedilla]alho, e com a linha #! implementacao wolfram, que \
+diz QUEM calculou \[LongDash] pergunta que o core_hash n\[ATilde]o responde. \
+A interface exibe essa origem na reimporta\[CCedilla]\[ATilde]o: um resultado \
+vindo daqui n\[ATilde]o deve se passar por um resultado do n\[UAcute]cleo.\
+\>", "Text",ExpressionUUID->"0245c1ef-1e29-4153-a80f-f05ae4e011cc"],
+
+Cell["\<\
+csv = DaedalusCSV[r[\"Espec\"], r[\"Rede\"], r[\"Metricas\"], \
+r[\"Propagacao\"], r[\"Observaveis\"]];
+StringTake[csv, 600]\
+\>", "Input",ExpressionUUID->"ce40255b-8c82-4d35-ba3a-85d3c73ea066"],
+
+Cell["\<\
+DaedalusExportarCSV[\"saida_wolfram.csv\", r[\"Espec\"], r[\"Rede\"], \
+r[\"Metricas\"],
+  r[\"Propagacao\"], r[\"Observaveis\"]]\
+\>", "Input",ExpressionUUID->"8bc154a5-34c0-481e-8f7f-d716ff80bd25"],
+
+Cell["\<\
+11. Verifica\[CCedilla]\[ATilde]o contra o n\[UAcute]cleo, e a companheira \
+que prova que ela pode falhar\
+\>", "Section",ExpressionUUID->"c065110d-ce56-46f1-89d8-e31cf50bac51"],
+
+Cell["\<\
+A verifica\[CCedilla]\[ATilde]o confere, nesta ordem: o fluxo do PRNG contra \
+uma tabela de refer\[EHat]ncia, a impress\[ATilde]o digital do grafo (exigida \
+id\[EHat]ntica, sem toler\[AHat]ncia nenhuma), o contador de \
+religa\[CCedilla]\[OTilde]es que falharam, e s\[OAcute] ent\[ATilde]o os \
+observ\[AAcute]veis.\
+\>", "Text",ExpressionUUID->"189407a5-7673-4be0-9130-4418f555c1bc"],
+
+Cell["\<\
+A ordem \[EAcute] o diagn\[OAcute]stico. Se o PRNG divergir, nada abaixo faz \
+sentido. Se a digital divergir, os dois constru\[IAcute]ram grafos diferentes \
+e o propagador n\[ATilde]o est\[AAcute] em quest\[ATilde]o. E o contador de \
+religa\[CCedilla]\[OTilde]es falhas pega o caso que a digital n\[ATilde]o v\
+\[EHat]: em K_N toda tentativa de religa\[CCedilla]\[ATilde]o colide, o grafo \
+sai id\[EHat]ntico, e s\[OAcute] esse contador testemunha que os dois \
+gastaram o mesmo fluxo de sorteios.\
+\>", "Text",ExpressionUUID->"e28bc456-5379-405a-baaa-022566e572b6"],
+
+Cell["\<\
+Os casos de refer\[EHat]ncia ficam no reposit\[OAcute]rio, em specs/oraculo. \
+Se este caderno veio exportado, eles n\[ATilde]o vieram junto \[LongDash] s\
+\[ATilde]o do projeto, n\[ATilde]o do seu resultado.\
+\>", "Text",ExpressionUUID->"665a7213-e1b4-4297-b2b0-a7086ff0f7e9"],
+
+Cell["\<\
+pastaRef = SelectFirst[{\"../../specs/oraculo\", \"specs/oraculo\"}, \
+DirectoryQ, $Failed]\
+\>", "Input",ExpressionUUID->"9d8fb02c-01d3-4231-acfd-a03d19c85a13"],
+
+Cell["\<\
+rel = DaedalusVerificarReferencia[pastaRef];
+rel[\"Veredito\"]\
+\>", "Input",ExpressionUUID->"ad1d405b-cac4-4c18-9464-557b327c5b07"],
+
+Cell["\<\
+{rel[\"PiorAbsoluto\"], rel[\"PiorRelativo\"], rel[\"PiorAmplitude\"]}\
+\>", "Input",ExpressionUUID->"a35e5449-f2db-433a-b967-986a7a10bda3"],
+
+Cell["\<\
+Esta verifica\[CCedilla]\[ATilde]o \[EAcute] MANUAL: a integra\[CCedilla]\
+\[ATilde]o cont\[IAcute]nua do projeto n\[ATilde]o tem Mathematica.\
+\>", "Text",ExpressionUUID->"684a27a3-2526-4963-afdc-07de2c1d154f"],
+
+Cell["\<\
+E rode sempre a companheira junto. Ela sabota o grafo, o fluxo de sorteios, \
+os n\[UAcute]meros e o pr\[OAcute]prio arquivo, e exige que cada sabotagem \
+produza o veredito correspondente. Sem ela, \"todos os casos passaram\" e \"a \
+verifica\[CCedilla]\[ATilde]o est\[AAcute] quebrada e sempre verde\" s\
+\[ATilde]o indistingu\[IAcute]veis pelo resultado.\
+\>", "Text",ExpressionUUID->"49509004-014b-4ee9-aa8a-4834ebff29c7"],
+
+Cell["DaedalusAntiVacuidade[pastaRef][\"Veredito\"]", "Input",ExpressionUUID->"8ecaf8de-648c-4b54-82a3-25744388ded7"],
+
+Cell["Dataset[DaedalusAntiVacuidade[pastaRef][\"Companheiras\"]]", "Input",ExpressionUUID->"5dc7055e-2776-44bb-a6eb-f624ab0ebbe3"]
+},
+WindowSize->{1000, 800},
+WindowMargins->Automatic,
+FrontEndVersion->"15.0 for Linux x86 (64-bit) (May 19, 2026)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"f16ed857-9a9f-4f65-b337-c48160ad396b"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[554, 20, 141, 1, 70, "Title",ExpressionUUID->"c776a93f-e637-4e3e-8a0b-0d4e51e96c2b"],
+Cell[698, 23, 320, 5, 70, "Text",ExpressionUUID->"8cae507d-3264-4316-9509-b73dd391c826"],
+Cell[1021, 30, 434, 6, 70, "Text",ExpressionUUID->"d7c3ca7f-77cf-49ec-9258-55e36c107127"],
+Cell[1458, 38, 650, 9, 70, "Text",ExpressionUUID->"5ba1452a-e4ac-40bb-9a5b-9730739ee749"],
+Cell[2111, 49, 94, 0, 70, "Section",ExpressionUUID->"93408cff-6ae7-40b5-add1-280e98dfaff4"],
+Cell[2208, 51, 133, 0, 70, "Text",ExpressionUUID->"4a82ff17-fe93-4c3c-a8e6-ea49567d8bc7"],
+Cell[2344, 53, 135, 3, 70, "Input",ExpressionUUID->"3c5d7496-ea51-41f6-9c49-16687acfd61b"],
+Cell[2482, 58, 83, 0, 70, "Input",ExpressionUUID->"cf805ae2-a7ca-482d-9de8-477e0f5037ad"],
+Cell[2568, 60, 111, 0, 70, "Section",ExpressionUUID->"414a3564-0018-4a5e-a4a1-2a7717a94fb2"],
+Cell[2682, 62, 268, 4, 70, "Text",ExpressionUUID->"690fb616-b68d-4ac4-9a79-f0ac093a9a4c"],
+Cell[2953, 68, 277, 4, 70, "Text",ExpressionUUID->"81c33119-6001-4025-869e-75915b916349"],
+Cell[3233, 74, 225, 4, 70, "Input",ExpressionUUID->"7a7e352b-44a6-440c-bf69-531f4842f805"],
+Cell[3461, 80, 113, 3, 70, "Input",ExpressionUUID->"bd98c44d-51af-4365-976c-f73d6fdcdd3c"],
+Cell[3577, 85, 142, 3, 70, "Input",ExpressionUUID->"431cded1-1922-43f1-a509-3e261ccf4ff7"],
+Cell[3722, 90, 147, 1, 70, "Section",ExpressionUUID->"ab0f85aa-f296-4934-bccb-21fbd95a3d5a"],
+Cell[3872, 93, 477, 7, 70, "Text",ExpressionUUID->"f5a57b35-eca1-441c-8d7c-f544e417730b"],
+Cell[4352, 102, 196, 4, 70, "Input",ExpressionUUID->"2c674a34-2779-4112-a4cf-20695ace11e3"],
+Cell[4551, 108, 548, 8, 70, "Text",ExpressionUUID->"2e745193-4394-4614-a3bd-4d3797488d6c"],
+Cell[5102, 118, 217, 4, 70, "Input",ExpressionUUID->"e7d98810-941c-41a9-951e-5756bb115524"],
+Cell[5322, 124, 145, 1, 70, "Section",ExpressionUUID->"7841e955-8065-4b3f-bbce-e80f69e6ff7a"],
+Cell[5470, 127, 312, 5, 70, "Text",ExpressionUUID->"87ee43a1-b3aa-4269-a984-3bec1ebf17b0"],
+Cell[5785, 134, 319, 5, 70, "Text",ExpressionUUID->"a6aebb42-2319-49db-aa93-1b95f6d9f972"],
+Cell[6107, 141, 286, 6, 70, "Input",ExpressionUUID->"85666e85-8005-492d-b44b-a87d8a16240f"],
+Cell[6396, 149, 91, 0, 70, "Section",ExpressionUUID->"d04dae90-0752-48c5-956c-4b305100cba1"],
+Cell[6490, 151, 160, 3, 70, "Input",ExpressionUUID->"02e2584d-8bdf-4fe8-b066-edc51e9fdebf"],
+Cell[6653, 156, 536, 8, 70, "Text",ExpressionUUID->"6bbb1ec1-1be6-4ff9-b6a2-ee73d9f6e2f7"],
+Cell[7192, 166, 154, 1, 70, "Section",ExpressionUUID->"7527e975-7c9b-4342-af42-b355ffebced2"],
+Cell[7349, 169, 256, 4, 70, "Input",ExpressionUUID->"3e252829-dea9-42bd-afdc-19234cecacd4"],
+Cell[7608, 175, 342, 5, 70, "Text",ExpressionUUID->"ef03d43b-b673-4a27-92d9-98345ba77123"],
+Cell[7953, 182, 131, 0, 70, "Text",ExpressionUUID->"a3143d8e-1812-4a63-94b3-9faf439fbba4"],
+Cell[8087, 184, 96, 0, 70, "Section",ExpressionUUID->"8aeb97c4-3748-4b61-8ddc-d1267e11abb4"],
+Cell[8186, 186, 134, 3, 70, "Input",ExpressionUUID->"4798de34-399d-47c2-87a8-e6072eade5a4"],
+Cell[8323, 191, 326, 5, 70, "Input",ExpressionUUID->"baf87dfd-31ee-47d7-8c00-ab07cbef6969"],
+Cell[8652, 198, 265, 4, 70, "Text",ExpressionUUID->"1404aa49-49a6-4d02-93d2-4fd6df8856e1"],
+Cell[8920, 204, 240, 4, 70, "Input",ExpressionUUID->"c4d1a686-47cc-491c-b5a7-c4c3a0556634"],
+Cell[9163, 210, 107, 0, 70, "Section",ExpressionUUID->"08f50a15-d1c2-47f0-b1e5-f7dd84171b12"],
+Cell[9273, 212, 645, 10, 70, "Text",ExpressionUUID->"d28c20c0-4d14-42cd-b1da-a587c1c80dde"],
+Cell[9921, 224, 119, 0, 70, "Input",ExpressionUUID->"3b7ebc5d-e9b9-47ef-88c0-8dd4a67b2401"],
+Cell[10043, 226, 123, 0, 70, "Section",ExpressionUUID->"269794db-a06d-42a9-977c-cb538df7c0a3"],
+Cell[10169, 228, 252, 4, 70, "Text",ExpressionUUID->"feb276c8-7bb1-4ab0-a262-4dfe7d2feeef"],
+Cell[10424, 234, 285, 5, 70, "Input",ExpressionUUID->"f68bd5c2-b140-4fed-8db9-1a0749372921"],
+Cell[10712, 241, 118, 0, 70, "Section",ExpressionUUID->"4612e106-4564-4a03-8ce9-d7b7d14e9a7e"],
+Cell[10833, 243, 470, 6, 70, "Text",ExpressionUUID->"0245c1ef-1e29-4153-a80f-f05ae4e011cc"],
+Cell[11306, 251, 204, 4, 70, "Input",ExpressionUUID->"ce40255b-8c82-4d35-ba3a-85d3c73ea066"],
+Cell[11513, 257, 209, 4, 70, "Input",ExpressionUUID->"8bc154a5-34c0-481e-8f7f-d716ff80bd25"],
+Cell[11725, 263, 188, 3, 70, "Section",ExpressionUUID->"c065110d-ce56-46f1-89d8-e31cf50bac51"],
+Cell[11916, 268, 396, 6, 70, "Text",ExpressionUUID->"189407a5-7673-4be0-9130-4418f555c1bc"],
+Cell[12315, 276, 580, 8, 70, "Text",ExpressionUUID->"e28bc456-5379-405a-baaa-022566e572b6"],
+Cell[12898, 286, 287, 4, 70, "Text",ExpressionUUID->"665a7213-e1b4-4297-b2b0-a7086ff0f7e9"],
+Cell[13188, 292, 171, 3, 70, "Input",ExpressionUUID->"9d8fb02c-01d3-4231-acfd-a03d19c85a13"],
+Cell[13362, 297, 142, 3, 70, "Input",ExpressionUUID->"ad1d405b-cac4-4c18-9464-557b327c5b07"],
+Cell[13507, 302, 150, 2, 70, "Input",ExpressionUUID->"a35e5449-f2db-433a-b967-986a7a10bda3"],
+Cell[13660, 306, 221, 3, 70, "Text",ExpressionUUID->"684a27a3-2526-4963-afdc-07de2c1d154f"],
+Cell[13884, 311, 436, 6, 70, "Text",ExpressionUUID->"49509004-014b-4ee9-aa8a-4834ebff29c7"],
+Cell[14323, 319, 117, 0, 70, "Input",ExpressionUUID->"8ecaf8de-648c-4b54-82a3-25744388ded7"],
+Cell[14443, 321, 130, 0, 70, "Input",ExpressionUUID->"5dc7055e-2776-44bb-a6eb-f624ab0ebbe3"]
+}
+]
+*)
+
+(* End of internal cache information *)

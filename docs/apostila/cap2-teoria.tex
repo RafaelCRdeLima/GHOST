@@ -1,0 +1,428 @@
+\chapter{A teoria, do começo}
+\label{cap:teoria}
+\markboth{Teoria}{Teoria}
+
+Tudo que segue cabe em uma frase: \textbf{o neutrino tem dois conjuntos de
+estados, e eles discordam.}
+
+\section{Sabor e massa}
+
+Os estados de \emph{sabor} $\ket{\nue}$, $\ket{\numu}$, $\ket{\nutau}$ são
+definidos pelo lépton carregado com que a partícula é produzida ou detectada.
+É o que um detector mede: o argônio enxerga $\nue$ porque a reação
+$\nue + {}^{40}\text{Ar} \to e^- + {}^{40}\text{K}^*$ produz um elétron.
+
+Os estados de \emph{massa} $\ket{\nu_1}$, $\ket{\nu_2}$, $\ket{\nu_3}$ são os
+que têm energia definida, e portanto os que propagam com fase simples.
+
+Os dois conjuntos não coincidem. Uma matriz unitária $U$ --- a matriz PMNS, de
+Pontecorvo, Maki, Nakagawa e Sakata --- liga um ao outro:
+\begin{equation}
+  \ket{\nu_\alpha} = \sum_{i} U_{\alpha i}^{*}\,\ket{\nu_i},
+  \qquad \alpha \in \{e,\mu,\tau\},\quad i \in \{1,2,3\}.
+\end{equation}
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}[x=1cm, y=1cm, font=\sffamily\small]
+  % sabor
+  \node[anchor=south, font=\sffamily\bfseries\small, text=cyanescuro] at (0,2.55) {sabor};
+  \foreach \i/\y/\n in {a/2.0/{$\nu_e$}, b/1.3/{$\nu_\mu$}, c/0.6/{$\nu_\tau$}}{
+    \node[draw=cyanescuro, fill=cyanescuro!8, rounded corners=2pt,
+          minimum width=1.5cm, minimum height=0.52cm, font=\small] (f\i) at (0,\y) {\n};}
+  \node[anchor=north, text=grafite, font=\sffamily\scriptsize, align=center]
+    at (0,0.22) {o que o\\detector mede};
+
+  % massa
+  \node[anchor=south, font=\sffamily\bfseries\small, text=goldescuro] at (6.2,2.55) {massa};
+  \foreach \i/\y/\n in {a/2.0/{$\nu_1$}, b/1.3/{$\nu_2$}, c/0.6/{$\nu_3$}}{
+    \node[draw=goldescuro, fill=goldescuro!8, rounded corners=2pt,
+          minimum width=1.5cm, minimum height=0.52cm, font=\small] (m\i) at (6.2,\y) {\n};}
+  \node[anchor=north, text=grafite, font=\sffamily\scriptsize, align=center]
+    at (6.2,0.22) {o que\\propaga};
+
+  % a matriz entre os dois
+  \node[draw=linha, fill=papel, rounded corners=3pt, minimum width=2.3cm,
+        minimum height=2.1cm, font=\sffamily\bfseries\small, text=tinta] (U) at (3.1,1.3) {$U$};
+  \node[anchor=north, text=grafite, font=\sffamily\scriptsize, align=center]
+    at (3.1,0.22) {$\theta_{12},\theta_{13},\theta_{23},\delta_{\rm CP}$};
+
+  \foreach \i in {a,b,c}{
+    \draw[cyanescuro, opacity=0.5, -{Stealth[length=4pt]}] (f\i.east) -- (U.west);
+    \draw[goldescuro, opacity=0.5, {Stealth[length=4pt]}-] (U.east) -- (m\i.west);}
+\end{tikzpicture}
+\caption{Os dois conjuntos de estados e a rotação entre eles. Três ângulos e
+uma fase descrevem $U$ inteira. Toda a fenomenologia de oscilação é a
+consequência de produzir na base da esquerda, propagar na base da direita, e
+perguntar de novo na da esquerda.}
+\end{figure}
+
+\section{Oscilação no vácuo}
+
+Massas diferentes acumulam fase a taxas diferentes. Um estado criado como
+$\nue$ puro é, depois de percorrer $L$, uma superposição distinta; perguntar de
+novo pelo sabor pode dar outra resposta. No caso de dois sabores,
+\begin{equation}
+  P(\nue \to \nue) = 1 - \sin^2 2\theta \,
+    \sin^2\!\left(\frac{\pi L}{\Losc}\right),
+  \qquad
+  \Losc = \frac{4\pi E}{\Delta m^2}.
+\end{equation}
+
+Em unidades práticas,
+\begin{equation}
+  \Losc[\text{m}] = 2{,}48\;\frac{E[\text{MeV}]}{\Delta m^2[\text{eV}^2]},
+\end{equation}
+onde o $2{,}48$ é para onde foi o $\hbar c$. Guarde esse número: ele aparece em
+toda estimativa de ordem de grandeza daqui para a frente. Para
+$E = 20\ \text{MeV}$ e $\dm{31} = 2{,}51\times10^{-3}\ \text{eV}^2$, dá
+$\Losc \simeq 19{,}8$~km.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=12.4cm, height=5.4cm,
+  xlabel={$L/\Losc$}, ylabel={$P(\nue\to\nue)$},
+  xmin=0, xmax=3, ymin=0, ymax=1.06,
+  xtick={0,0.5,1,1.5,2,2.5,3}, ytick={0,0.25,0.5,0.75,1},
+  grid=major, grid style={linha, line width=0.4pt},
+  tick label style={font=\sffamily\scriptsize, color=grafite},
+  label style={font=\sffamily\small, color=tinta},
+  axis line style={grafite}, legend style={font=\sffamily\scriptsize,
+    draw=linha, fill=papel, at={(0.98,0.03)}, anchor=south east},
+]
+\addplot[cyanescuro, line width=1.3pt, domain=0:3, samples=400]
+  {1 - 0.85*sin(deg(pi*x))^2};
+\addlegendentry{$\sin^2 2\theta = 0{,}85$}
+\addplot[goldescuro, line width=1.3pt, domain=0:3, samples=400]
+  {1 - 0.09*sin(deg(pi*x))^2};
+\addlegendentry{$\sin^2 2\theta = 0{,}09$}
+\end{axis}
+\end{tikzpicture}
+\caption{Oscilação no vácuo. O ângulo de mistura fixa a \emph{profundidade} do
+vale; a razão $L/E$ fixa \emph{onde} ele cai. Com ângulo pequeno a conversão no
+vácuo é fraca --- e é exatamente essa a situação que o efeito de matéria vira
+do avesso.}
+\end{figure}
+
+\section{Dentro da matéria, o problema não é o mesmo}
+\label{sec:materia}
+
+Acrescente o potencial de Wolfenstein à entrada $\nue$ do hamiltoniano:
+\begin{equation}
+  H(r) = \underbrace{\frac{1}{2E}\,U
+      \operatorname{diag}\!\left(0,\ \dm{21},\ \dm{31}\right) U^{\dagger}}_{\text{vácuo: fixo}}
+    + \underbrace{\operatorname{diag}\!\left(\sqrt{2}\,G_F\,\frac{Y_e\,\rho(r)}{m_N},
+      \ 0,\ 0\right)}_{\text{matéria: depende de onde o neutrino está}}.
+\label{eq:hamiltoniano}
+\end{equation}
+
+É esta a matriz que o GHOST integra, e ela merece ser desmontada peça por peça
+--- é a equação de que tudo o mais neste documento é consequência.
+
+\subsection{De onde vem o primeiro termo}
+
+Um neutrino relativístico de momento $p$ e massa $m_i$ tem energia
+\begin{equation}
+  E_i = \sqrt{p^2 + m_i^2} \;\simeq\; p + \frac{m_i^2}{2p}
+   \;\simeq\; E + \frac{m_i^2}{2E},
+\end{equation}
+porque $m_i \ll p$ --- para $m \lesssim 0{,}1$~eV e $E \sim 10$~MeV a razão é
+$10^{-8}$. Na base de massa a evolução é uma fase por estado,
+$\ket{\nu_i(t)} = e^{-iE_i t}\ket{\nu_i(0)}$, logo o gerador é
+$\operatorname{diag}(m_1^2, m_2^2, m_3^2)/2E$, a menos do termo comum $E$.
+
+Esse termo comum é proporcional à identidade. \textbf{Uma fase global não é
+observável}, então ele sai --- e, pela mesma razão, pode-se subtrair
+$m_1^2/2E$ de todos, o que deixa
+$\operatorname{diag}(0,\ \dm{21},\ \dm{31})/2E$. É por isso que só aparecem
+\emph{diferenças} de massa ao quadrado: são as únicas coisas que a oscilação
+consegue enxergar.
+
+Falta ir para a base em que o detector pergunta. A rotação
+$H_{\alpha\beta} = \sum_i U_{\alpha i}\,\lambda_i\,U^{*}_{\beta i}$, com
+$\lambda = (0, \dm{21}, \dm{31})/2E$, é literalmente o laço triplo que o código
+executa.
+
+\subsection{De onde vem o segundo}
+
+Atravessando matéria, o neutrino espalha para a frente \emph{coerentemente} ---
+sem perder energia e sem mudar de direção, apenas acumulando fase, como luz
+atravessando vidro. Isso é um índice de refração, e um índice de refração é um
+potencial.
+
+Todo sabor espalha por corrente neutra, e igualmente. Um termo proporcional à
+identidade, de novo, não faz nada. Mas só o $\nue$ espalha por \emph{corrente
+carregada}, trocando um $W$ com os elétrons do meio --- porque não há múons nem
+taus por perto para o $\numu$ e o $\nutau$ trocarem. Sobra
+\begin{equation}
+  V_{\rm CC} = \sqrt{2}\,G_F\,n_e,
+  \qquad n_e = \frac{Y_e\,\rho}{m_N},
+\end{equation}
+em uma única entrada. $Y_e$ é a fração de elétrons por bárion, e $m_N$ a massa
+do núcleon.
+
+\begin{nota}
+\rotulo{a constante, em número}
+Juntando $G_F$, $(\hbar c)^3$ e $m_N$, o potencial em eV por unidade de
+$Y_e\,\rho$ em g\,cm$^{-3}$ vale
+\[
+  \frac{\sqrt{2}\,G_F (\hbar c)^3}{m_N}
+  = 7{,}566899624856641\times10^{-14}\ \text{eV}\ \frac{\text{cm}^3}{\text{g}}.
+\]
+É a \cmd{DAE\_NU\_V\_POR\_RHO} do \cmd{dae\_neutrino.h}, e ela é
+\emph{derivada} das constantes, não tabelada --- o comentário no código diz
+isso explicitamente. Note que a massa usada é a do \textbf{nêutron}, não a
+unidade de massa atômica: a escolha muda o valor em $0{,}87\%$, e trocá-la
+``corrigindo'' para $m_u$ desloca a ressonância.
+\end{nota}
+
+Para antineutrinos o sinal de $V$ inverte, o que é a razão física de a
+ressonância morar no setor de neutrinos com ordenamento normal e no de
+antineutrinos com invertido.
+
+\subsection{A ressonância, com o número}
+
+Um neutrino que sai do núcleo de uma estrela viaja para fora, atravessando
+densidade decrescente. Na densidade em que o potencial de matéria cancela a
+separação de vácuo --- isto é, em
+$V = (\dm{31}/2E)\cos 2\theta_{13}$ --- os dois níveis atingem sua aproximação
+máxima.
+
+Vale a pena fazer essa conta uma vez na vida. Com $\dm{31} = 2{,}51\times10^{-3}$~eV$^2$,
+$E = 20$~MeV e $\theta_{13} = 8{,}6^\circ$:
+\begin{align}
+  \frac{\dm{31}}{2E} &= \frac{2{,}51\times10^{-3}}{2\times2\times10^{7}}
+     = 6{,}275\times10^{-11}\ \text{eV},\\[2pt]
+  V_{\rm res} &= 6{,}275\times10^{-11}\times\cos(17{,}2^\circ)
+     = 5{,}994\times10^{-11}\ \text{eV},\\[2pt]
+  (Y_e\rho)_{\rm res} &= \frac{5{,}994\times10^{-11}}{7{,}5669\times10^{-14}}
+     = \mathbf{792}\ \text{g\,cm}^{-3}.
+\end{align}
+
+Que é a equação~\eqref{eq:resonancia}, agora com procedência:
+\begin{equation}
+  Y_e\,\rho_{\rm res} \simeq 792\ \text{g\,cm}^{-3}\,
+     \left(\frac{20\ \text{MeV}}{E}\right).
+\label{eq:resonancia}
+\end{equation}
+A dependência em $1/E$ é o que faz a assinatura do choque \emph{migrar através
+da energia} conforme a frente se move --- o mapa em $(t,E)$ do
+capítulo~\ref{cap:exemplos}.
+
+\subsection{O ângulo de mistura efetivo}
+
+A forma mais limpa de ver o que a matéria faz é diagonalizar
+$H$ em densidade constante. Com dois sabores, o ângulo em matéria obedece
+\begin{equation}
+  \sin^2 2\theta_m = \frac{\sin^2 2\theta}
+    {\left(\cos 2\theta - x\right)^2 + \sin^2 2\theta},
+  \qquad x \equiv \frac{2E\,V}{\Delta m^2}.
+\label{eq:angulo-efetivo}
+\end{equation}
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=12.4cm, height=5.4cm,
+  xlabel={$x = 2EV/\Delta m^2$}, ylabel={$\sin^2 2\theta_m$},
+  xmin=0, xmax=2.2, ymin=0, ymax=1.09,
+  grid=major, grid style={linha, line width=0.4pt},
+  tick label style={font=\sffamily\scriptsize, color=grafite},
+  label style={font=\sffamily\small, color=tinta},
+  axis line style={grafite},
+  legend style={font=\sffamily\scriptsize, draw=linha, fill=papel,
+    at={(0.98,0.97)}, anchor=north east},
+]
+\addplot[cyanescuro, line width=1.4pt, domain=0:2.2, samples=500]
+  {0.0879/((0.95528-x)^2 + 0.0879)};
+\addlegendentry{$\theta_{13} = 8{,}6^\circ$ (canal H)}
+\addplot[goldescuro, line width=1.4pt, domain=0:2.2, samples=500]
+  {0.8418/((0.39715-x)^2 + 0.8418)};
+\addlegendentry{$\theta_{12} = 33{,}4^\circ$ (canal L)}
+\draw[grafite, dotted, line width=0.7pt] (axis cs:0,0.0879) -- (axis cs:2.2,0.0879);
+\node[anchor=west, font=\sffamily\scriptsize, text=grafite]
+  at (axis cs:1.55,0.155) {valor no vácuo};
+\end{axis}
+\end{tikzpicture}
+\caption{O ângulo efetivo em matéria, equação~\eqref{eq:angulo-efetivo}. Um
+ângulo de vácuo \emph{pequeno} não dá uma ressonância fraca --- dá uma
+ressonância \textbf{estreita}, que ainda assim chega a mistura máxima. É todo o
+efeito MSW numa figura: o pico vale 1 nos dois casos, e o que muda é a largura,
+que é $2\sin 2\theta$ em $x$.}
+\label{fig:angulo-efetivo}
+\end{figure}
+
+\begin{alerta}
+\rotuloa{o engano que essa figura desfaz}
+``$\theta_{13}$ é pequeno, então a conversão pelo canal H é pequena.'' Falso.
+Na ressonância a mistura é \emph{máxima} independentemente de $\theta$. O que o
+ângulo pequeno controla é quão rápido se atravessa a região de mistura ---
+e isso é adiabaticidade, o assunto da subseção seguinte, não amplitude.
+\end{alerta}
+
+\subsection{Os dois termos ao longo de uma supernova}
+
+Como $V \propto \rho$ e o perfil cai aproximadamente como $r^{-3}$, o segundo
+termo da equação~\eqref{eq:hamiltoniano} varre muitas ordens de grandeza
+enquanto o primeiro fica parado. Onde as curvas se cruzam, há ressonância.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{loglogaxis}[
+  width=12.4cm, height=6.0cm,
+  xlabel={raio $r$ (km)}, ylabel={energia (eV)},
+  xmin=3e3, xmax=3e5, ymin=1e-13, ymax=1e-6,
+  grid=major, grid style={linha, line width=0.4pt},
+  tick label style={font=\sffamily\scriptsize, color=grafite},
+  label style={font=\sffamily\small, color=tinta},
+  axis line style={grafite},
+]
+% V(r) = 7.5669e-14 * Ye * rho(r), rho = 1e10 (100/r)^3, Ye = 0.5
+\addplot[cyanescuro, line width=1.5pt, domain=3e3:3e5, samples=200]
+  {3.78345e-4 * (100/x)^3};
+\node[anchor=south west, font=\sffamily\scriptsize, text=cyanescuro]
+  at (axis cs:3.4e3,2.4e-8) {$V(r)$, o termo de matéria};
+% Dm31 cos2t13 / 2E  a 20 MeV
+\addplot[goldescuro, densely dashed, line width=1.1pt, domain=3e3:3e5]{5.9944e-11};
+\node[anchor=south east, font=\sffamily\scriptsize, text=goldescuro]
+  at (axis cs:2.8e5,7.0e-11) {canal H};
+% Dm21 cos2t12 / 2E a 20 MeV
+\addplot[anilescuro, densely dashed, line width=1.1pt, domain=3e3:3e5]{7.3717e-13};
+\node[anchor=north east, font=\sffamily\scriptsize, text=anilescuro]
+  at (axis cs:2.8e5,6.2e-13) {canal L};
+% marcas dos cruzamentos
+\fill[tinta] (axis cs:18482,5.9944e-11) circle (2.2pt);
+\fill[tinta] (axis cs:80064,7.3717e-13) circle (2.2pt);
+\node[anchor=south west, font=\sffamily\scriptsize, text=tinta]
+  at (axis cs:19500,7.4e-11) {$\approx 1{,}8\times10^{4}$ km};
+\node[anchor=south west, font=\sffamily\scriptsize, text=tinta]
+  at (axis cs:84000,9.0e-13) {$\approx 8\times10^{4}$ km};
+\end{loglogaxis}
+\end{tikzpicture}
+\caption{Os dois termos da equação~\eqref{eq:hamiltoniano} ao longo de um
+envelope $\rho = 10^{10}\,(100\,\text{km}/r)^3$ g\,cm$^{-3}$ com $Y_e = 0{,}5$,
+para $E = 20$~MeV. O termo de matéria despenca sete ordens de grandeza; os de
+vácuo são horizontais. Cada interseção é uma ressonância --- H em
+$\sim\!1{,}8\times10^{4}$~km, L em $\sim\!8\times10^{4}$~km. \textbf{É por isso
+que o domínio de integração não é escolha livre:} começar dentro demais ou
+terminar fora de menos corta uma das duas.}
+\label{fig:dois-termos}
+\end{figure}
+
+\begin{nota}
+\rotulo{por que só a entrada $\nue$}
+$\numu$ e $\nutau$ também espalham coerentemente, por corrente neutra --- mas
+igualmente, nos três sabores. Um termo proporcional à identidade só muda a fase
+global e não afeta oscilação. O que sobra é a diferença, e ela é exclusiva do
+$\nue$, porque só há elétrons no meio.
+\end{nota}
+
+\subsection{O cruzamento evitado}
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=12.4cm, height=5.8cm,
+  xlabel={potencial de matéria $\;\longrightarrow$}, ylabel={autovalor},
+  xmin=-6.4, xmax=6.4, ymin=-2.4, ymax=4.0,
+  xtick=\empty, ytick=\empty,
+  tick label style={font=\sffamily\scriptsize},
+  label style={font=\sffamily\small, color=tinta},
+  axis line style={grafite},
+]
+% diabaticos (sabor)
+\addplot[grafite, densely dashed, line width=0.7pt, domain=-6.4:6.4]{0};
+\addplot[grafite, densely dashed, line width=0.7pt, domain=-6.4:6.4]{0.578*x};
+% adiabaticos (massa em materia)
+\addplot[cyanescuro, line width=1.4pt, domain=-6.4:6.4, samples=300]
+  {0.289*x + sqrt(0.0835*x*x + 0.30)};
+\addplot[goldescuro, line width=1.4pt, domain=-6.4:6.4, samples=300]
+  {0.289*x - sqrt(0.0835*x*x + 0.30)};
+% a separacao minima
+\draw[tinta, line width=0.7pt, {Stealth[length=4pt]}-{Stealth[length=4pt]}]
+  (axis cs:0,0.548) -- (axis cs:0,-0.548);
+\node[anchor=west, font=\sffamily\scriptsize, text=tinta]
+  at (axis cs:0.25,0) {$\Delta m^2 \sin 2\theta / 2E$};
+\node[anchor=south, font=\sffamily\scriptsize, text=grafite] at (axis cs:-4.6,0.12) {$\nu_\mu$};
+\node[anchor=south east, font=\sffamily\scriptsize, text=grafite] at (axis cs:-3.9,-2.34) {$\nu_e$};
+\node[anchor=south west, font=\sffamily\scriptsize, text=cyanescuro] at (axis cs:4.3,3.0) {$\nu_{2}^{m}$};
+\node[anchor=north west, font=\sffamily\scriptsize, text=goldescuro] at (axis cs:4.3,0.05) {$\nu_{1}^{m}$};
+\draw[grafite, dotted, line width=0.6pt] (axis cs:0,-2.4) -- (axis cs:0,-0.7);
+\node[anchor=north, font=\sffamily\scriptsize, text=tinta] at (axis cs:0,-2.42) {ressonância};
+\end{axis}
+\end{tikzpicture}
+\caption{O cruzamento evitado. Tracejado: os estados de sabor, que se cruzariam
+se não houvesse mistura. Cheio: os autoestados em matéria, que se repelem. A
+separação mínima é proporcional a $\sin 2\theta$ --- por isso um ângulo pequeno
+dá um cruzamento \emph{estreito}, e não um cruzamento fraco.}
+\label{fig:cruzamento}
+\end{figure}
+
+\subsection{Adiabaticidade: o que decide é a velocidade}
+
+Um sistema de dois níveis varrido através de um cruzamento evitado tem dois
+limites, e eles dão respostas opostas.
+
+\begin{center}
+\begin{tabular}{@{}>{\sffamily\small}p{5.2cm} >{\sffamily\small}p{4.8cm} >{\sffamily\bfseries}c@{}}
+\toprule
+\sffamily\bfseries\small Se a densidade muda\dots & \sffamily\bfseries\small o neutrino\dots
+  & \sffamily\bfseries\small $\PH$ \\
+\midrule
+devagar, ao longo de muitos comprimentos de oscilação
+  & permanece no seu próprio nível & 0 \\
+abruptamente, em menos de um
+  & salta para o outro & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A quantidade $\PH$ é a \emph{probabilidade de cruzamento}: a chance de o estado
+pular de um ramo para o outro. Vale zero no limite adiabático e um no limite
+súbito. Para um perfil exponencial existe fórmula fechada, devida a Petcov
+(1988) e a Kuo e Pantaleone (1989), e é contra ela que o código se valida.
+
+\begin{alerta}
+\rotuloa{por que isto decide o ordenamento de massa}
+Já medimos as duas separações de massa, mas não a ordem delas. $\nu_3$ é o
+estado mais pesado --- ordenamento normal --- ou o mais leve --- invertido? Os
+dois ordenamentos põem a ressonância H em setores diferentes: no normal, no
+setor de neutrinos; no invertido, no de antineutrinos. \textbf{O argônio lê
+justamente o canal $\nue$}, que é o de maior alavanca sobre essa pergunta, e é
+por isso que o DUNE importa aqui.
+\end{alerta}
+
+\section{Coerência, e por onde ela se perde}
+
+As fórmulas acima pressupõem que a superposição sobrevive. Ela não sobrevive
+indefinidamente: os pacotes de onda associados aos diferentes estados de massa
+viajam com velocidades de grupo distintas e acabam se separando. Passada essa
+distância, as fases relativas deixam de importar e sobram apenas as
+probabilidades.
+
+\begin{conceito}
+\rotuloc{convenção que a física impôs, 1 de 2}
+Para neutrinos de fonte astrofísica, o comprimento de coerência é da ordem de
+$32$~km. A coerência morre antes de o neutrino sair da galáxia.
+
+\medskip
+\textbf{Portanto o observável é o incoerente.} Reportar $P$ coerente num ponto
+final é reportar uma fase que já não existe. No GHOST isto não é uma opção de
+configuração: é a definição do que se mede.
+\end{conceito}
+
+Quando se quer modelar a perda de coerência explicitamente, e não apenas
+descartá-la no fim, o objeto certo é a matriz densidade e uma equação mestra de
+Lindblad. No caso de defasagem pura na base de sabor,
+\begin{equation}
+  \frac{d\rho_{ab}}{dt} = -i[H,\rho]_{ab} - \gamma\,(1-\delta_{ab})\,\rho_{ab},
+\label{eq:lindblad}
+\end{equation}
+que amortece as coerências fora da diagonal e preserva as populações. O GHOST
+implementa isso por trajetórias quânticas, com operadores de salto
+$L_j = \sqrt{\gamma}\,\ket{j}\bra{j}$.

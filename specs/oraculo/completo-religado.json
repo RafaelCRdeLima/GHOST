@@ -1,0 +1,33 @@
+{
+  "format_version": 2,
+  "seed": 20260828,
+  "graph": {
+    "generator": "complete",
+    "params": {
+      "n": 12,
+      "n_modules": 3,
+      "ws_p": 0.4,
+      "conn_mode": "rewire"
+    }
+  },
+  "hamiltonian": {
+    "kind": "adjacency",
+    "gamma": 1.0,
+    "normalization": "spectral",
+    "lanczos_steps": 30
+  },
+  "initial": {
+    "site": 0
+  },
+  "time": {
+    "t1": 4.0,
+    "nt": 10
+  },
+  "observables": {
+    "target": 7,
+    "population": false,
+    "module_concurrence": true,
+    "pop_stride": 1
+  },
+  "realizations": 1
+}

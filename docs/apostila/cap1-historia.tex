@@ -1,0 +1,156 @@
+\chapter{De onde veio a pergunta}
+\markboth{História}{História}
+
+Este capítulo não é decoração. Quase todo erro que você vai cometer nos
+primeiros meses já foi cometido por alguém entre 1930 e 2005, e a forma do erro
+está registrada. Vale saber onde.
+
+\section{Uma partícula inventada para salvar uma conta}
+
+Em dezembro de 1930 Wolfgang Pauli escreveu a uma reunião em Tübingen propondo
+uma partícula neutra, leve e quase inerte, emitida junto com o elétron no
+decaimento beta. O espectro do elétron era contínuo, e num decaimento de dois
+corpos ele deveria ser uma linha. Ou a energia não se conservava --- que era a
+alternativa que Bohr considerava seriamente --- ou faltava alguém levando o
+resto.
+
+Pauli chamou sua proposta de \emph{remédio desesperado} e escreveu que tinha
+feito algo que um teórico não deveria: postular uma partícula que, pelos seus
+próprios cálculos, ninguém conseguiria detectar. Ele estava errado, mas por
+pouco: foram vinte e seis anos.
+
+\begin{nota}
+\rotulo{o que fica disso}
+A seção de choque do neutrino é pequena porque a interação é fraca, e é essa
+mesma pequenez que o torna útil. Um fóton emitido no centro de uma estrela leva
+milhares de anos para sair. Um neutrino sai em segundos. \textbf{É a única
+sonda que atravessa.}
+\end{nota}
+
+Em 1956 Clyde Cowan e Frederick Reines puseram detectores de cintilador líquido
+junto ao reator de Savannah River e mediram o decaimento beta inverso,
+$\bar\nue + p \to n + e^+$. Mandaram um telegrama a Pauli. A partícula existia.
+
+\section{O problema solar, e ele durou trinta anos}
+
+Nos anos 1960 Raymond Davis instalou um tanque de 615 toneladas de
+percloroetileno na mina de Homestake, em Dakota do Sul --- a mesma mina onde
+hoje se constrói o detector distante do DUNE --- para contar neutrinos do Sol
+pela reação $\nue + {}^{37}\text{Cl} \to {}^{37}\text{Ar} + e^-$. John Bahcall
+calculou quantos deveriam chegar.
+
+Davis media cerca de um terço da previsão. E mediu isso, com a mesma resposta,
+por três décadas.
+
+A comunidade passou anos dividida entre duas explicações naturais e uma
+estranha. A natural era que o modelo solar estivesse errado --- a taxa depende
+muito fortemente da temperatura central. A outra natural era que o experimento
+tivesse um problema. A estranha, levantada por Bruno Pontecorvo já em 1957 e
+elaborada por Maki, Nakagawa e Sakata em 1962, era que o neutrino \emph{mudasse
+de identidade no caminho}.
+
+\begin{alerta}
+\rotuloa{o padrão que se repete}
+A hipótese estranha venceu, mas só depois que a heliossismologia fechou a porta
+do modelo solar e que um segundo tipo de experimento mediu a coisa de outro
+jeito. \textbf{Uma anomalia num único canal não resolve nada.} É o mesmo
+argumento que aparece no capítulo~\ref{cap:fronteira} quando se discute o que o
+GHOST pode e o que não pode afirmar sozinho.
+\end{alerta}
+
+\section{Dois anúncios que fecharam a questão}
+
+\begin{description}
+\item[1987.] Em 23 de fevereiro, Kamiokande-II, IMB e Baksan registraram, em
+  cerca de treze segundos, vinte e quatro eventos de neutrino. Horas depois a
+  supernova SN~1987A apareceu na Grande Nuvem de Magalhães. É o único evento de
+  neutrinos de supernova já detectado, e praticamente tudo que sabemos
+  \emph{observacionalmente} sobre o colapso de um núcleo estelar vem daqueles
+  vinte e quatro eventos.
+
+\item[1998.] O Super-Kamiokande mostrou que neutrinos atmosféricos produzidos do
+  outro lado da Terra chegavam em menor número que os produzidos logo acima ---
+  uma dependência com a distância percorrida, que é a assinatura de oscilação e
+  não de um erro de fluxo.
+
+\item[2002.] O SNO mediu o fluxo solar de duas maneiras: pelo canal de corrente
+  carregada, sensível só a $\nue$, e pelo canal de corrente neutra, sensível aos
+  três sabores igualmente. O fluxo total batia com Bahcall. O de $\nue$ era um
+  terço. Os neutrinos não sumiam; viravam outra coisa.
+\end{description}
+
+Davis e Masatoshi Koshiba dividiram o Nobel de 2002; Takaaki Kajita e Arthur
+McDonald, o de 2015. Como oscilar exige massa, e o Modelo Padrão foi construído
+com neutrinos sem massa, esta é até hoje a única evidência de laboratório de
+física além dele.
+
+\section{A matéria muda o problema}
+
+Em 1978 Lincoln Wolfenstein notou que um $\nue$ atravessando matéria comum
+espalha para a frente coerentemente nos elétrons do meio por corrente carregada
+--- e $\numu$ e $\nutau$ não, porque não há múons nem taus por perto para
+trocar. A matéria adiciona um potencial \emph{a uma única entrada} do
+hamiltoniano.
+
+Em 1985 Stanislav Mikheyev e Alexei Smirnov viram a consequência: se a densidade
+varia ao longo do caminho, existe um ponto onde esse potencial cancela a
+separação de vácuo, e ali os dois níveis chegam à sua aproximação máxima. A
+conversão pode ser quase total mesmo com ângulo de mistura pequeno. É o efeito
+MSW, e é ele que explica o déficit solar --- e o que este código calcula.
+
+\begin{conceito}
+\rotuloc{o fio da meada}
+Pauli inventa a partícula para salvar a conservação de energia. Reines e Cowan a
+encontram. Davis mede um terço do previsto. Pontecorvo sugere que ela mude de
+identidade. Wolfenstein mostra que a matéria quebra a simetria entre os sabores.
+Mikheyev e Smirnov mostram que uma densidade \emph{variável} produz conversão
+ressonante. SN~1987A entrega os únicos dados. SNO fecha a questão.
+
+\medskip
+O GHOST entra no ponto em que a densidade deixa de ser suave: uma supernova real
+tem um choque, e o choque atravessa a ressonância.
+\end{conceito}
+
+\section{A linha do tempo}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm, y=1cm]
+  \def\Y{0}
+  \draw[linha, line width=2.4pt] (0,\Y) -- (13.6,\Y);
+
+  % marcos: posicao / ano / rotulo curto / cor
+  \foreach \x/\ano/\txt/\c in {%
+      0.2/1930/{Pauli}/grafite,
+      1.9/1956/{Reines\\Cowan}/grafite,
+      3.6/1968/{Davis\\o déficit}/goldescuro,
+      5.3/1978/{Wolfenstein\\matéria}/cyanescuro,
+      6.8/1985/{MSW\\ressonância}/cyanescuro,
+      8.3/1987/{SN 1987A}/goldescuro,
+      9.8/1998/{Super-K}/grafite,
+      11.2/2002/{SNO}/grafite,
+      12.7/2026/{GHOST}/anilescuro}{
+    \fill[\c] (\x,\Y) circle (3.2pt);
+    \draw[\c, line width=1pt] (\x,\Y) -- (\x,\Y+0.42);
+    \node[anchor=south, font=\sffamily\bfseries\scriptsize, text=\c,
+          align=center, inner sep=1pt] at (\x,\Y+0.44) {\ano};
+    \node[anchor=north, font=\sffamily\scriptsize, text=grafite,
+          align=center, inner sep=3pt] at (\x,\Y-0.14) {\txt};
+  }
+
+  % as duas faixas conceituais
+  \draw[decorate, decoration={brace, amplitude=4pt, mirror}, cyanescuro,
+        line width=0.7pt] (5.05,\Y-1.28) -- (7.25,\Y-1.28);
+  \node[anchor=north, font=\sffamily\scriptsize, text=cyanescuro]
+    at (6.15,\Y-1.42) {efeito de matéria};
+
+  \draw[decorate, decoration={brace, amplitude=4pt, mirror}, goldescuro,
+        line width=0.7pt] (3.3,\Y-1.28) -- (3.9,\Y-1.28);
+  \node[anchor=north, font=\sffamily\scriptsize, text=goldescuro]
+    at (3.6,\Y-1.42) {a anomalia};
+\end{tikzpicture}
+\par\vspace{6pt}
+\captionof{figure}{Noventa e seis anos. Em dourado, as medidas que não fechavam; em
+ciano, a teoria que explicou por quê. O GHOST fica no fim porque a pergunta
+dele --- o que acontece quando a densidade \emph{não} é suave --- só faz sentido
+depois de todo o resto.}
+\end{center}

@@ -1,0 +1,31 @@
+\documentclass[11pt,a4paper,openany]{report}
+\input{preambulo}
+\begin{document}
+
+\input{capa}
+
+% ---- sumario -------------------------------------------------------------
+\thispagestyle{empty}
+\vspace*{1.2cm}
+{\sffamily\bfseries\LARGE\color{tinta}Sumário}\par
+\vspace{2pt}{\color{gold}\rule{3.2cm}{2pt}}\par
+\vspace{1.0cm}
+{\titlecontents{chapter}[0em]
+  {\vspace{1.1ex}\sffamily\bfseries\color{tinta}}
+  {\color{cyanescuro}\thecontentslabel\hspace{0.8em}}{}
+  {\;\titlerule*[0.6pc]{.}\;\color{grafite}\thecontentspage}
+ \titlecontents{section}[1.6em]
+  {\vspace{0.15ex}\small\color{grafite}}
+  {\thecontentslabel\hspace{0.6em}}{}
+  {\;\titlerule*[0.6pc]{.}\;\thecontentspage}
+ \makeatletter\@starttoc{toc}\makeatother}
+\clearpage
+
+\input{cap1-historia}
+\input{cap2-teoria}
+\input{cap3-nucleo}
+\input{cap4-exemplos}
+\input{cap5-fronteira}
+\input{cap6-comecar}
+
+\end{document}

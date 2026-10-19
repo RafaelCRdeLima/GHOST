@@ -1,0 +1,218 @@
+\chapter{Exemplos de aplicação direta}
+\label{cap:exemplos}
+\markboth{Exemplos}{Exemplos}
+
+Tudo neste capítulo foi \textbf{executado}, não estimado. Os números são os
+medidos, e cada um tem um script que o reproduz.
+
+\section{O teste que você roda primeiro}
+
+\subsection{Dois sabores no vácuo}
+
+O caso com resposta analítica. Compare a saída do propagador contra
+$\sin^2 2\theta \sin^2(kL)$ e exija concordância de máquina.
+
+\begin{center}
+\begin{tabular}{@{}>{\sffamily\small}p{6.6cm} >{\small}l@{}}
+\toprule
+\sffamily\bfseries\small Cenário & \sffamily\bfseries\small Erro medido \\
+\midrule
+2 sabores, vácuo, contra fórmula fechada & $2{,}1\times10^{-15}$ \\
+3 sabores \emph{com} fase CP, em matéria, contra \cmd{expm} do SciPy & $7{,}2\times10^{-15}$ \\
+contra \cmd{NuOscProbExact}, código público de método diferente & pior caso $2{,}2\times10^{-14}$ em 320 comparações \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+O terceiro é o que vale mais. Os dois primeiros comparam o código contra a
+matemática e contra si mesmo por outra rota; o terceiro compara contra uma
+implementação independente, escrita por outras pessoas com outro método.
+
+\begin{alerta}
+\rotuloa{cuidado com a segunda implementação}
+Os cinco scripts antigos que montavam a PMNS e o hamiltoniano em Python foram
+\textbf{aposentados}. Eram uma segunda implementação da mesma física, e uma
+segunda implementação só concorda com a primeira até o dia em que uma das duas
+muda. O único cálculo em Python que sobrou é a fórmula analítica de referência,
+que precisa ser independente \emph{de propósito}.
+\end{alerta}
+
+\subsection{A ressonância MSW}
+
+Com o ângulo fixo, ligue o potencial de matéria e varra a densidade. A
+amplitude de conversão sobe de $0{,}117$ para $0{,}999$ --- sem tocar em
+$\theta$. É o efeito inteiro numa linha de saída: matéria não muda a mistura,
+muda o problema.
+
+\subsection{Um envelope de supernova}
+
+Para $\rho \propto r^{-3}$, o GHOST entrega, num único \cmd{ghost run}:
+\[
+  P_{\rm inc}(\nue) = 0{,}0223635
+  \qquad\text{contra}\qquad
+  \sin^2\theta_{13} = 0{,}0223608,
+\]
+que é o valor adiabático esperado. A quinta casa.
+
+\subsection{Custo}
+
+Um espectro completo do DUNE, 200 energias $\times$ 2 sinais: \textbf{13\,ms}.
+Isto importa mais do que parece --- um propagador que custa minutos não entra
+num ajuste, e um que custa milissegundos entra.
+
+\section{Validação contra a única conversão MSW que a natureza mediu}
+
+Os testes acima comparam contra matemática e contra outro código. Nenhum
+compara contra \emph{dado}. E existe exatamente uma conversão MSW medida: a do
+Sol.
+
+A comparação é feita canal a canal contra o Borexino, que mediu a
+probabilidade de sobrevivência em várias energias --- do pp em
+$0{,}267$~MeV, onde o código dá $0{,}54$, até o ${}^{8}$B, já no regime de
+matéria. Não reproduzo os valores aqui porque eles mudam quando a tabela de
+referência muda, e uma
+apostila que cita número de validação desatualizado é pior que uma que não
+cita.
+
+\begin{nota}
+\rotulo{por que este teste é diferente}
+Os neutrinos solares de baixa energia saem no regime de vácuo, e os de alta
+energia no regime de matéria adiabática. A transição entre os dois regimes ---
+o ``sobe-desce'' da curva de sobrevivência --- é a assinatura do MSW, e é a
+única medida direta dele. Um código que reproduz a fórmula fechada mas erra a
+curva solar tem um problema de física, não de numérica.
+\end{nota}
+
+\section{A pergunta que o código foi construído para responder}
+
+Uma supernova real não tem perfil suave. Há convecção, instabilidade do choque
+de acreção, turbulência numa ampla faixa de escalas, e uma frente de choque
+movendo-se para fora a dez mil quilômetros por segundo.
+
+O GHOST estabeleceu \textbf{duas condições} que dizem quais dessas estruturas a
+ressonância consegue sentir.
+
+\subsection{Primeira condição: a escala}
+
+Excite um modo de Fourier por vez sobre um perfil suave e meça o vazamento
+$\Delta = P_{\rm inc}(\nue) - \sin^2\theta_{13}$, que se anula no limite
+adiabático. A resposta é \emph{zero} para $\lambda > \Losc$ e cai como
+$\lambda^{1{,}4\pm0{,}1}$ abaixo disso. Cinco ordens de grandeza em escala.
+
+\subsection{Segunda condição: a amplitude}
+
+Com a escala dentro da janela, o vazamento cresce como $\sigma^{2{,}02\pm0{,}03}$
+sobre um fator 33 em amplitude, com o coeficiente reduzido $\Delta/\sigma^2$
+variando apenas 9\%. Lei quadrática, saturando em um contraste de densidade de
+$\sigma \simeq 8\%$.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+  width=12.4cm, height=5.2cm,
+  xlabel={amplitude do contraste de densidade $\sigma$},
+  ylabel={vazamento $\Delta$ (u.a.)},
+  xmin=3e-4, xmax=3e-1, ymin=0, ymax=1.18,
+  grid=major, grid style={linha, line width=0.4pt},
+  tick label style={font=\sffamily\scriptsize, color=grafite},
+  label style={font=\sffamily\small, color=tinta},
+  axis line style={grafite},
+]
+% lei quadratica, saturando em 8%
+\addplot[cyanescuro, line width=1.4pt, domain=3e-4:8e-2, samples=120]
+  {(x/0.08)^2};
+\addplot[cyanescuro, line width=1.4pt, domain=8e-2:3e-1, samples=40]{1};
+\draw[goldescuro, densely dashed, line width=0.9pt]
+  (axis cs:0.08,0) -- (axis cs:0.08,1.18);
+\node[anchor=south east, font=\sffamily\scriptsize, text=goldescuro, rotate=90]
+  at (axis cs:0.077,0.10) {saturação, $\sigma \simeq 8\%$};
+\node[anchor=west, font=\sffamily\scriptsize, text=cyanescuro]
+  at (axis cs:1.2e-3,0.55) {$\Delta \propto \sigma^{2{,}02\pm0{,}03}$};
+% onde caem as estruturas reais
+\draw[grafite, dotted, line width=0.8pt] (axis cs:7e-4,0) -- (axis cs:7e-4,1.18);
+\node[anchor=west, font=\sffamily\scriptsize, text=grafite, rotate=90]
+  at (axis cs:6.6e-4,0.10) {turbulência real};
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{A segunda condição. A turbulência que os modelos de fato exibem está
+$111\times$ abaixo da saturação; a frente de choque está $50\times$ acima. Não
+é uma questão de grau --- as duas caem em regimes diferentes.}
+\end{figure}
+
+\subsection{O que as duas condições classificam}
+
+\begin{center}
+\begin{tabular}{@{}>{\sffamily\small}p{5.0cm} >{\small}c >{\small}c >{\small}c@{}}
+\toprule
+\sffamily\bfseries\small Estrutura & \sffamily\bfseries\small escala $<\Losc$?
+  & \sffamily\bfseries\small amplitude $\gtrsim 8\%$? & \sffamily\bfseries\small importa? \\
+\midrule
+turbulência, $\sigma = 7\times10^{-4}$ & sim & não, $111\times$ abaixo & não \\
+convecção, SASI, fluxos grandes & não, grandes demais & sim & não \\
+\textbf{frente de choque} & \textbf{sim, é descontinuidade} & \textbf{sim, $50\times$ acima} & \textbf{sim} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Uma estrutura precisa passar nas \emph{duas} peneiras. Só a frente de choque
+passa.
+
+\section{E aí vem o problema prático}
+
+A frente qualifica porque é uma descontinuidade. A questão passa a ser: que
+largura uma simulação hidrodinâmica de fato entrega, medida em comprimentos de
+oscilação na ressonância?
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+  width=12.4cm, height=5.0cm,
+  xlabel={largura da frente, em unidades de $\Losc$},
+  ylabel={$\PH$},
+  xmin=0.02, xmax=20, ymin=0, ymax=1.05,
+  grid=major, grid style={linha, line width=0.4pt},
+  tick label style={font=\sffamily\scriptsize, color=grafite},
+  label style={font=\sffamily\small, color=tinta},
+  axis line style={grafite},
+]
+\addplot[cyanescuro, line width=1.4pt, domain=0.02:20, samples=200]
+  {1/(1 + (x/0.55)^2.4)};
+\draw[goldescuro, densely dashed, line width=0.9pt] (axis cs:0.1,0) -- (axis cs:0.1,1.05);
+\draw[goldescuro, densely dashed, line width=0.9pt] (axis cs:3,0) -- (axis cs:3,1.05);
+\node[anchor=south west, font=\sffamily\scriptsize, text=cyanescuro]
+  at (axis cs:0.022,0.86) {satura: efeito total};
+\node[anchor=south east, font=\sffamily\scriptsize, text=grafite]
+  at (axis cs:19,0.06) {morre};
+\node[anchor=south, font=\sffamily\scriptsize, text=goldescuro] at (axis cs:0.55,0.55)
+  {a janela};
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{Abaixo de $0{,}1\,\Losc$ o efeito satura; acima de $3\,\Losc$ ele
+morre. Uma frente numérica de duas a três zonas num modelo 3D mede
+$5{,}9\,\Losc$ --- do lado errado.}
+\end{figure}
+
+\begin{alerta}
+\rotuloa{o achado central, e é uma correção que caducou}
+A frente de choque \textbf{precisa ser afiada à mão} antes de a evolução de
+sabor ser calculada. Isso era prática padrão entre 2002 e 2013. \emph{Nenhum
+pipeline atual faz isso.}
+
+\medskip
+Omitir o afiamento remove cerca de metade de $\PH$: de $0{,}31$ para $0{,}81$ em
+valor absoluto, conforme o caso. E há um agravante medido: a \textbf{média
+angular destrói a frente por um fator 18}. O arquivo público distribui perfis
+promediados; cada raio individual cruza abruptamente, a média não.
+\end{alerta}
+
+\section{O que isso custa ao DUNE}
+
+Um modelo de fonte real através do SNOwGLoBES, \cmd{ar40kt} a 10\,kpc: a
+contagem de corrente carregada de $\nue$ cai de $1241{,}8$ para $1187{,}0$
+eventos. O viés fica entre $-3{,}9\%$ e $-4{,}4\%$ conforme a família de fonte.
+
+Poucos por cento, com sinal que segue a fonte. Não é um erro dramático --- mas
+hoje o pipeline atribui \emph{erro zero} a esse passo, porque aplica uma
+constante, e uma constante não tem barra de erro.

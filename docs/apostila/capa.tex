@@ -1,0 +1,89 @@
+% ---------------------------------------------------------------------------
+% Capa. Sangria total em navy, com o cruzamento evitado desenhado ao fundo:
+% as duas curvas que quase se tocam SAO o assunto do documento.
+% ---------------------------------------------------------------------------
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture, overlay]
+
+  % fundo
+  \fill[navyfundo] (current page.south west) rectangle (current page.north east);
+
+  % campo de raios tenue, saindo do canto superior direito: a supernova
+  \begin{scope}
+    \clip (current page.south west) rectangle (current page.north east);
+    \foreach \a in {188,194,...,268}{
+      \draw[cyan, opacity=0.07, line width=0.5pt]
+        ($(current page.north east)+(0.6,0.6)$) -- ++(\a:32cm);
+    }
+    \foreach \r in {5,9,...,29}{
+      \draw[cyan, opacity=0.05, line width=0.4pt]
+        ($(current page.north east)+(0.6,0.6)$) circle (\r cm);
+    }
+  \end{scope}
+
+  % ---- o cruzamento evitado, elemento central -----------------------------
+  % Dois autovalores em funcao da densidade. Longe da ressonancia eles seguem
+  % as assintotas; perto dela se repelem. E a figura do capitulo 3.
+  \begin{scope}[shift={($(current page.center)+(0,-3.95)$)}, x=1cm, y=1cm]
+    % Assintotas: os estados de SABOR, que se cruzariam sem mistura.
+    % Para y = 0.289x +- sqrt(0.0835x^2 + 0.30), as assintotas sao exatamente
+    % y = 0 e y = 0.578x. Desenhar outra coisa seria desenhar outra fisica.
+    \draw[areia, opacity=0.18, line width=0.6pt, dash pattern=on 2pt off 2.6pt]
+      (-6.4,0) -- (6.4,0);
+    \draw[areia, opacity=0.18, line width=0.6pt, dash pattern=on 2pt off 2.6pt]
+      (-6.4,-3.70) -- (6.4,3.70);
+    % ramos de fato (autovalores em materia)
+    \draw[cyan, line width=1.5pt]
+      plot[domain=-6.4:6.4, samples=220] (\x, {0.289*\x + sqrt(0.0835*\x*\x + 0.30)});
+    \draw[gold, line width=1.5pt]
+      plot[domain=-6.4:6.4, samples=220] (\x, {0.289*\x - sqrt(0.0835*\x*\x + 0.30)});
+    % a separacao minima
+    \draw[areia, opacity=0.5, line width=0.5pt] (0,0.548) -- (0,-0.548);
+    \fill[areia, opacity=0.85] (0,0.548) circle (1.5pt);
+    \fill[areia, opacity=0.85] (0,-0.548) circle (1.5pt);
+    \node[areia, opacity=0.62, font=\sffamily\tiny, right=5pt] at (0.1,0)
+      {ressonância};
+  \end{scope}
+
+  % ---- texto --------------------------------------------------------------
+  \node[anchor=north west, text=cyan, font=\espacejada\footnotesize]
+    at ($(current page.north west)+(2.9,-2.6)$)
+    {APOSTILA PARA COMEÇAR};
+
+  \node[anchor=north west, inner sep=0pt]
+    at ($(current page.north west)+(2.88,-3.35)$)
+    {\parbox{15cm}{\raggedright
+       {\displayfont\fontsize{74}{74}\selectfont\color{areia} GHOST}\\[10pt]
+       {\displayfont\fontsize{21}{27}\selectfont\color{cyan}
+        Oscilação de neutrinos:\\ sabor, matéria e decoerência}}};
+
+  \node[anchor=north west, inner sep=0pt]
+    at ($(current page.north west)+(2.95,-8.5)$)
+    {\tikz\draw[gold, line width=2.2pt] (0,0) -- (3.6,0);};
+
+  \node[anchor=north west, inner sep=0pt]
+    at ($(current page.north west)+(2.88,-9.3)$)
+    {\parbox{12.2cm}{\raggedright\sffamily\color{areia}\fontsize{10.2}{15.6}\selectfont
+       Um neutrino de $n$ sabores é um sistema de $n$ níveis com hamiltoniano
+       hermitiano. O núcleo do GHOST propaga
+       $\ket{\psi(t)}=e^{-iHt}\ket{\psi(0)}$ por expansão de Chebyshev, para
+       $H$ qualquer --- esparsa e hermitiana. Oscilação de sabor é um caso
+       particular. Esta apostila leva esse caso a sério, do início.}};
+
+  % rodape
+  \node[anchor=south west, inner sep=0pt]
+    at ($(current page.south west)+(2.88,2.05)$)
+    {\parbox{13cm}{\raggedright\sffamily\color{areia}\fontsize{9.4}{14}\selectfont
+       \textbf{Rafael C. R. de Lima}\\
+       {\color{cyan}Universidade do Estado de Santa Catarina\,\textperiodcentered\,ICRANet}}};
+
+  \node[anchor=south east, inner sep=0pt]
+    at ($(current page.south east)+(-2.88,2.05)$)
+    {\sffamily\color{grafite}\footnotesize \today};
+
+  \draw[cyan, opacity=0.30, line width=0.6pt]
+    ($(current page.south west)+(2.88,3.0)$) -- ($(current page.south east)+(-2.88,3.0)$);
+
+\end{tikzpicture}
+\end{titlepage}

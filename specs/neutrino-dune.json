@@ -1,0 +1,16 @@
+{
+  "format_version": 3,
+  "seed": 1,
+  "neutrino": {
+    "n_flavors": 3,
+    "theta12_deg": 33.4, "theta13_deg": 8.6, "theta23_deg": 49.0,
+    "delta_cp_deg": -90.0,
+    "dm21_sq_eV2": 7.42e-5, "dm31_sq_eV2": 2.51e-3,
+    "energy_MeV": 2500.0,
+    "flavor": "mu",
+    "rho_g_cm3": 2.8, "Ye": 0.5
+  },
+  "time": { "t1": 1300.0, "nt": 130 },
+  "observables": { "target": 0, "population": false },
+  "realizations": 1
+}

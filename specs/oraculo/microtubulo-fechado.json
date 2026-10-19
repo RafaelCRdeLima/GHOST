@@ -1,0 +1,35 @@
+{
+  "format_version": 2,
+  "seed": 2026,
+  "graph": {
+    "generator": "microtubule",
+    "params": {
+      "n_par": 20,
+      "n_perp": 13,
+      "seam_shift": 3,
+      "longitudinal_closed": true,
+      "n_modules": 4,
+      "j_perp": 0.7
+    }
+  },
+  "hamiltonian": {
+    "kind": "adjacency",
+    "gamma": 1.0,
+    "normalization": "mean_degree",
+    "lanczos_steps": 40
+  },
+  "initial": {
+    "site": 0
+  },
+  "time": {
+    "t1": 6.0,
+    "nt": 12
+  },
+  "observables": {
+    "target": 259,
+    "population": false,
+    "module_concurrence": true,
+    "pop_stride": 1
+  },
+  "realizations": 1
+}

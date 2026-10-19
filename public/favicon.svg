@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Daedalus">
+  <title>Daedalus</title>
+  <path d="M7 7 V25 M7 7 H25 V25 H7 M7 16 H18"
+        fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>

@@ -1,0 +1,261 @@
+\chapter{Como o GHOST calcula}
+\label{cap:nucleo}
+\markboth{O núcleo}{O núcleo}
+
+O GHOST é um \emph{fork} do DAEDALUS, que é um laboratório de caminhadas
+quânticas em grafos. Isso parece uma origem estranha para um código de
+neutrinos, e a explicação é de uma linha: o núcleo do DAEDALUS propaga
+$\ket{\psi(t)} = e^{-iHt}\ket{\psi(0)}$ para $H$ \textbf{qualquer}, desde que
+esparsa e hermitiana. Oscilação de sabor é um caso particular disso, e um caso
+pequeno.
+
+\begin{nota}
+\rotulo{por que um fork, e não uma extensão}
+A alternativa seria acrescentar geradores, controles e observáveis de neutrinos
+ao DAEDALUS. Isso daria ao projeto um segundo dono e uma segunda pergunta, e
+nenhuma das duas ficaria bem servida. O núcleo em C mantém o prefixo
+\cmd{dae\_} de propósito: renomear as 1791 ocorrências tornaria impossível
+trazer correções do DAEDALUS por \emph{cherry-pick}. O que foi renomeado é a
+superfície --- o produto, o binário, o cabeçalho de proveniência do CSV.
+\end{nota}
+
+\section{Como a equação~\eqref{eq:hamiltoniano} vira código}
+
+Antes de propagar é preciso \emph{montar} $H$. O módulo \cmd{dae\_neutrino.c}
+faz isso, e vale ler as decisões dele --- cada uma resolve um problema que
+morde quem as ignora.
+
+\subsection{Unidades: tudo em eV}
+
+$H$ sai em eV. O tempo do propagador é, portanto, $1/\text{eV}$, e uma linha de
+base em quilômetros converte por
+\begin{equation}
+  t = L[\text{km}] \times \underbrace{\frac{10^{5}\ \text{cm/km}}
+      {\hbar c = 1{,}9732698\times10^{-5}\ \text{eV\,cm}}}
+      _{\textstyle = \; 5{,}0677\times10^{9}},
+\end{equation}
+que é a constante \cmd{DAE\_NU\_T\_POR\_KM} do cabeçalho.
+Ambas as constantes --- esta e a do potencial de matéria --- são
+\textbf{derivadas} no cabeçalho a partir de $G_F$, $\hbar c$ e $m_N$, não
+tabeladas. É uma escolha deliberada: uma constante tabelada é um número que
+ninguém consegue auditar seis meses depois.
+
+\subsection{O traço é removido}
+
+Depois de montar $H_{\alpha\beta} = \sum_i U_{\alpha i}\lambda_i U^*_{\beta i}$
+e somar o potencial, o código subtrai o traço. Duas razões, e a segunda é a que
+importa aqui:
+
+\begin{itemize}
+\item uma fase global não é observável, então a subtração não custa nada;
+\item ela mantém o \textbf{espectro centrado}, e a expansão de Chebyshev precisa
+  reescalar $H$ para $[-1,1]$. Espectro centrado é reescalamento mais apertado,
+  que é menos termos para a mesma precisão.
+\end{itemize}
+
+\subsection{Nenhum \texorpdfstring{\cmd{\_Complex}}{\_Complex}}
+
+Com $\delta_{\rm CP}$ fora de $\{0,\pi\}$, $H$ é complexa. O
+\cmd{CONVENTIONS.md} proíbe \cmd{\_Complex} no núcleo, então a aritmética da
+PMNS anda em \textbf{pares de \cmd{double}} --- \cmd{hre} e \cmd{him}, row-major
+--- explícita e feia, de propósito. É daí que nasce a necessidade do mergulho
+real da seção~\ref{sec:mergulho}.
+
+\subsection{O limite espectral vem de Gershgorin}
+
+Aqui está a implementação da regra ``limite garantido, não estimado''. O código
+chama \cmd{dae\_csr\_gershgorin} sobre a matriz de adjacência e usa
+$\tfrac12(\lambda_{\max}-\lambda_{\min})$ como escala. O círculo de Gershgorin
+dá um limite \emph{rigoroso}: nenhum autovalor escapa dele, por teorema. Uma
+estimativa por amostragem daria um número menor e uma série divergente.
+
+\subsection{O passo é adaptativo, e há dois critérios}
+
+O perfil é fatiado; dentro de cada fatia $H$ é constante e o propagador é
+exato. A escolha do tamanho da fatia tem dois portões, e eles perguntam coisas
+diferentes.
+
+\begin{description}[leftmargin=0pt, itemsep=0.6ex]
+\item[Critério de erro.] Compara $k$ sub-passos contra $2k$, ambos partindo do
+  mesmo estado, e refina até a diferença cair sob a tolerância. É Richardson,
+  e pergunta: \emph{a resposta está convergida?}
+\item[Portão de viabilidade.] Pergunta outra coisa: \emph{o propagador
+  consegue dar UM passo desse tamanho?} O código limita
+  $\alpha = \|H\|\,\Delta t$ a \cmd{ALPHA\_MAX = 200} e subdivide até caber.
+\end{description}
+
+\begin{nota}
+\rotulo{por que o segundo portão existe}
+Perto da protoestrela, $V$ é da ordem de $10^{6}$ a $10^{7}$ vezes maior que
+$\dm{31}/2E$. Conferindo com os números da seção~\ref{sec:materia}: com
+$Y_e\rho \sim 5\times10^{9}$, $V \approx 3{,}8\times10^{-4}$~eV contra
+$6{,}3\times10^{-11}$~eV, uma razão de $6\times10^{6}$.
+
+\medskip
+Um passo de 30~km ali daria $\alpha \sim 6\times10^{7}$, e o Chebyshev
+precisaria de $K$ da mesma ordem --- ele recusa, com \cmd{DAE\_ERR\_TOOBIG}.
+\textbf{Fisicamente o regime é inofensivo:} com $V$ dominante o $\nue$ \emph{é}
+autoestado de matéria, e a fase rápida não muda observável nenhum. Mas o
+propagador não sabe disso. Tem de andar em passos que consiga dar.
+\end{nota}
+
+\section{Propagar sem exponenciar matriz}
+
+O caminho ingênuo para $e^{-iHt}$ é diagonalizar $H$. Para uma matriz $3\times3$
+isso é barato; para o que o núcleo foi feito, não é. A expansão de Chebyshev
+troca a diagonalização por uma soma de produtos matriz--vetor esparsos:
+\begin{equation}
+  e^{-iHt}\,\ket{\psi} \;\simeq\;
+    \sum_{k=0}^{K} c_k(t)\; T_k(\tilde H)\,\ket{\psi},
+\end{equation}
+onde $T_k$ são os polinômios de Chebyshev e $\tilde H$ é $H$ reescalada para o
+intervalo $[-1,1]$. Os coeficientes $c_k$ caem \emph{superexponencialmente}
+depois de $k \sim \|H\|t$, o que dá a precisão de máquina com um número modesto
+de termos e sem nunca formar uma matriz densa.
+
+\begin{alerta}
+\rotuloa{o limite espectral é garantido, não estimado}
+O reescalamento exige um limite superior para $\|H\|$. Estimá-lo por amostragem
+é o caminho rápido e é o caminho errado: se a estimativa ficar abaixo do valor
+real, a série diverge silenciosamente e o resultado sai plausível e falso. O
+\cmd{CONVENTIONS.md} exige um limite \emph{garantido}. Esta é uma das regras
+herdadas do DAEDALUS que não tinham nada a ver com grafos --- eram sobre não
+mentir no resultado.
+\end{alerta}
+
+\section{Auto-laços viram diagonal}
+
+O mapeamento é direto e não exigiu modificar o núcleo. Um sítio do grafo é um
+sabor; os termos de massa e o potencial de matéria entram como \emph{laços}
+$[i,i,w]$ na lista de arestas, e a mistura como aresta $[i,j,-\sin 2\theta]$.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm, y=1cm, font=\sffamily\small]
+  \node[circle, draw=cyanescuro, fill=cyanescuro!10, minimum size=1.15cm,
+        line width=1pt] (A) at (0,0) {$\nu_e$};
+  \node[circle, draw=goldescuro, fill=goldescuro!10, minimum size=1.15cm,
+        line width=1pt] (B) at (4.2,0) {$\nu_\mu$};
+  \draw[tinta, line width=1.1pt] (A) -- node[above, font=\sffamily\scriptsize,
+        text=tinta, yshift=1pt] {$-\sin 2\theta$} (B);
+  \draw[cyanescuro, line width=1.1pt] (A) to[out=125, in=55, looseness=8] (A);
+  \node[anchor=south, font=\sffamily\scriptsize, text=cyanescuro] at (0,0.95)
+        {$-\cos 2\theta + V(r)$};
+  \draw[goldescuro, line width=1.1pt] (B) to[out=125, in=55, looseness=8] (B);
+  \node[anchor=south, font=\sffamily\scriptsize, text=goldescuro] at (4.2,0.95)
+        {$+\cos 2\theta$};
+  \node[anchor=north, font=\sffamily\scriptsize, text=grafite, align=center]
+        at (2.1,-0.75) {o potencial de matéria entra em \emph{um} laço,\\
+                        e é só isso que quebra a simetria};
+\end{tikzpicture}
+\end{center}
+
+O cabeçalho \cmd{core/dae\_csr.h} já documentava que o laço \emph{``é como a
+energia de sítio entrará na fase 2''}. Ele entrou.
+
+\section{O mergulho real \texorpdfstring{$2n\times 2n$}{2n x 2n}}
+\label{sec:mergulho}
+
+Aqui está o achado que tornou tudo possível. O campo \cmd{dae\_csr.val} é
+\cmd{double}, e o \cmd{CONVENTIONS.md} §1 proíbe \cmd{\_Complex} no núcleo ---
+o C99 precisa continuar sendo C++17 válido. Mas o hamiltoniano de três sabores
+com fase $\delta_{\rm CP}$ é complexo.
+
+A saída: uma matriz hermitiana complexa tem um mergulho real simétrico. Escreva
+$H = X + iY$ com $X$ simétrica e $Y$ antissimétrica. Então
+\begin{equation}
+  \tilde H = \begin{pmatrix} X & -Y \\ Y & X \end{pmatrix}
+\end{equation}
+é real e simétrica, e o subespaço $\{(\psi, -i\psi)\}$ é invariante, com
+$\tilde H$ agindo nele exatamente como $H$. Três sabores com fase CP rodam num
+grafo de seis nós.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}[x=1cm, y=1cm, font=\sffamily\small]
+  % H complexo
+  \node[draw=linha, fill=papel, minimum width=2.1cm, minimum height=2.1cm,
+        rounded corners=2pt] (H) at (0,0) {};
+  \node at (0,0) {$X + iY$};
+  \node[anchor=south, font=\sffamily\bfseries\scriptsize, text=tinta] at (0,1.2)
+       {$H$ complexa, $n\times n$};
+  \node[anchor=north, font=\sffamily\scriptsize, text=goldescuro] at (0,-1.2)
+       {proibida no núcleo};
+
+  \draw[cyanescuro, line width=1.2pt, -{Stealth[length=5pt]}] (1.4,0) -- (3.3,0);
+  \node[anchor=south, font=\sffamily\scriptsize, text=cyanescuro] at (2.35,0.1)
+       {mergulho};
+
+  % H til real
+  \node[draw=cyanescuro, fill=cyanescuro!6, minimum width=2.9cm,
+        minimum height=2.9cm, rounded corners=2pt, line width=1pt] (Ht) at (5.6,0) {};
+  \draw[linha] (4.15,0) -- (7.05,0);
+  \draw[linha] (5.6,-1.45) -- (5.6,1.45);
+  \node at (4.87,0.72) {$X$};   \node at (6.33,0.72) {$-Y$};
+  \node at (4.87,-0.72) {$Y$};  \node at (6.33,-0.72) {$X$};
+  \node[anchor=south, font=\sffamily\bfseries\scriptsize, text=cyanescuro] at (5.6,1.6)
+       {$\tilde H$ real e simétrica, $2n\times 2n$};
+  \node[anchor=north, font=\sffamily\scriptsize, text=cyanescuro] at (5.6,-1.6)
+       {é o que o núcleo já sabe propagar};
+\end{tikzpicture}
+\caption{O mergulho real. Nenhuma linha do núcleo precisou mudar: o que mudou
+foi como o problema é apresentado a ele.}
+\end{figure}
+
+\begin{alerta}
+\rotuloa{o limite deste truque --- leia antes de usar}
+\textbf{O mergulho só vale para dinâmica unitária.} O colapso do modo
+trajetórias destrói a forma $(\psi, -i\psi)$, que é o que sustenta a
+equivalência. Na prática: hoje o GHOST faz \emph{ou} três sabores com fase CP,
+\emph{ou} decoerência --- não os dois juntos. Qualquer estudo sério de
+decoerência em três sabores precisa resolver isso primeiro.
+\end{alerta}
+
+\section{Trajetórias quânticas}
+
+Para a dinâmica dissipativa da equação~\eqref{eq:lindblad}, o núcleo usa
+desdobramento em trajetórias: propaga-se um estado puro com um hamiltoniano
+não-hermitiano efetivo, intercalando saltos estocásticos, e a média sobre
+muitas realizações reproduz a matriz densidade. O custo é $\mathcal{O}(n)$ em
+memória por trajetória, contra $\mathcal{O}(n^2)$ para $\rho$.
+
+A validação está fechada contra a solução exata da equação mestra, obtida por
+vetorização de Liouville: erro máximo de $1{,}3\times10^{-2}$ com 2000
+trajetórias, dentro do erro estatístico esperado de
+$1/\sqrt{2000} = 2{,}2\times10^{-2}$, e traço $1{,}000000000000$.
+
+\section{Duas convenções que a física de neutrinos impôs}
+
+As regras do \cmd{CONVENTIONS.md} são herdadas na íntegra. Duas são novas, e
+nasceram aqui.
+
+\begin{conceito}
+\rotuloc{convenção 2 de 2}
+\textbf{A métrica de convergência de um perfil de matéria é
+$|\braket{\nu_3}{\psi}|^2 \to 1$, nunca $P(\nue)$.}
+
+\medskip
+A probabilidade de sabor oscila e engana. Com 1500 fatias ela deu $0{,}0027$
+contra os $0{,}0224$ corretos --- e o \cmd{expm} do SciPy erra igual. Convergir
+a coisa errada com confiança é pior que não convergir.
+\end{conceito}
+
+A primeira convenção, sobre o observável incoerente, está na página~\pageref{cap:teoria}.
+
+\section{Um erro que custou tempo, e o registro dele}
+
+O domínio de integração não é escolha livre. Os sintomas, quando ele está
+errado, não se parecem com erro de domínio:
+
+\begin{center}
+\begin{tabular}{@{}>{\sffamily\small}p{3.9cm} >{\small}p{5.0cm} >{\small}p{3.4cm}@{}}
+\toprule
+\sffamily\bfseries\small Falha & \sffamily\bfseries\small Sintoma & \sffamily\bfseries\small Correção \\
+\midrule
+domínio curto demais para fora & erro de 26\% em 80\,MeV & $r_1 = 5\times10^{5}$\,km \\
+domínio raso demais para dentro & estado inicial não é autoestado de matéria & $\rho(r_0)/\rho_H > 10^{3}$ \\
+graus lidos como radianos & $\theta_{12} = 33{,}44^\circ$ virou $1916^\circ$ & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Nenhum dos três produz uma mensagem de erro. Todos produzem um número.

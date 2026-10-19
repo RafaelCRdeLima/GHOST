@@ -1,0 +1,33 @@
+{
+  "format_version": 2,
+  "seed": 99,
+  "graph": {
+    "generator": "sbm",
+    "params": {
+      "n": 200,
+      "n_modules": 4,
+      "p_in": 0.3,
+      "p_out": 0.01
+    }
+  },
+  "hamiltonian": {
+    "kind": "adjacency",
+    "gamma": 1.0,
+    "normalization": "mean_degree",
+    "lanczos_steps": 40
+  },
+  "initial": {
+    "site": 0
+  },
+  "time": {
+    "t1": 5.0,
+    "nt": 12
+  },
+  "observables": {
+    "target": 199,
+    "population": false,
+    "module_concurrence": true,
+    "pop_stride": 1
+  },
+  "realizations": 1
+}

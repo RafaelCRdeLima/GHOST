@@ -1,0 +1,66 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Daedalus — endereço não encontrado</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<!--
+  Esta página existe para que um endereço errado FALHE.
+
+  Sem ela o Cloudflare Pages devolve o index.html com status 200 em qualquer
+  caminho: /tutoriall e /tutorial passariam os dois, e o errado abriria o
+  aplicativo em vez de avisar. Um endereço digitado errado pareceria ter dado
+  certo, que é o pior modo de falhar — o mesmo motivo pelo qual o roteamento
+  não usa fallback de aplicação de página única.
+
+  Sem fonte externa, sem script: as regras de distribuição do projeto valem
+  aqui também, e uma página de erro que faz requisição para fora seria a única
+  do pacote a fazer.
+-->
+<style>
+  :root {
+    --ink: #0B1219; --painel: #17222E; --marmore: #F3EFE5;
+    --cera: #9AA6B0; --egeu: #17557C; --icaro: #E5A83F;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--ink); color: var(--marmore);
+    font-family: Inter, system-ui, sans-serif;
+    display: flex; align-items: center; justify-content: center; padding: 2rem;
+  }
+  main { max-width: 34rem; }
+  svg { color: var(--egeu); display: block; margin-bottom: 1.75rem; }
+  h1 {
+    font-family: "Space Grotesk", Inter, system-ui, sans-serif;
+    font-size: 1.5rem; font-weight: 500; margin: 0 0 .75rem; letter-spacing: .01em;
+  }
+  p { margin: 0 0 1rem; line-height: 1.6; color: var(--cera); }
+  code {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: .875rem; color: var(--icaro);
+    background: var(--painel); padding: .15em .45em; border-radius: 2px;
+  }
+  a { color: var(--icaro); text-decoration: none; border-bottom: 1px solid currentColor; }
+  a:hover { color: var(--marmore); }
+  nav { margin-top: 2rem; display: flex; gap: 1.5rem; font-size: .9375rem; }
+</style>
+<main>
+  <svg viewBox="0 0 100 100" width="52" height="52" role="img" aria-label="Daedalus">
+    <title>Daedalus</title>
+    <path d="M19 19 V81 M19 19 H81 V81 H19 M19 34.5 H65.5 V65.5 H19 M19 50 H50"
+          fill="none" stroke="currentColor" stroke-width="8"
+          stroke-linecap="square" stroke-linejoin="miter"/>
+  </svg>
+  <h1>Este endereço não existe</h1>
+  <p>
+    O Daedalus tem duas páginas: o laboratório, em <code>/</code>, e o tutorial,
+    em <code>/tutorial/</code>. Qualquer outro caminho cai aqui.
+  </p>
+  <p>
+    Você está vendo esta página, e não o aplicativo, de propósito: um endereço
+    errado que abrisse o laboratório pareceria ter funcionado.
+  </p>
+  <nav>
+    <a href="/">Laboratório</a>
+    <a href="/tutorial/">Tutorial</a>
+  </nav>
+</main>

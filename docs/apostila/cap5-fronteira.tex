@@ -1,0 +1,343 @@
+\chapter{Fronteira científica}
+\label{cap:fronteira}
+\markboth{Fronteira}{Fronteira}
+
+Este capítulo tem duas metades, e a segunda é tão importante quanto a primeira.
+A primeira lista o que está aberto. A segunda lista o que foi investigado e
+\textbf{descartado}, com o número que descartou --- para que não seja
+redescoberto a cada seis meses.
+
+\section{A revisão bibliográfica, e onde ela deixa espaço}
+
+A física de choque em supernova está estabelecida há mais de vinte anos. Vale
+saber exatamente o que já é de outros:
+
+\begin{center}
+\begin{tabular}{@{}>{\small}p{7.4cm} >{\sffamily\small}p{4.6cm}@{}}
+\toprule
+\small\bfseries Resultado & \sffamily\bfseries\small De quem \\
+\midrule
+o choque quebra a adiabaticidade & Schirato \& Fuller, 2002 \\
+a assinatura migra através da energia & Fogli et al., 2003 \\
+um choque reverso a duplica & Tomàs et al., 2004 \\
+a frente numérica precisa ser afiada à mão & Tomàs et al., 2004; Barger, Huber \& Marfatia, 2005 \\
+no $\theta_{13}$ grande medido, o canal H é efetivamente de dois sabores para amplitudes $\lesssim 1\%$ & Kneller \& Volpe, 2010 \\
+relativamente imune abaixo de $C^{*}\simeq1\%$; acima disso os efeitos crescem rápido & Kneller \& Mauney, 2013 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{nota}
+\rotulo{o que sobra, e é estreito}
+Ninguém quantificou \textbf{o que custa omitir} o afiamento. Barger, Huber e
+Marfatia enunciam a prática; não a ausência dela. ``Afie a frente à mão'' não
+tinha critério --- e o critério, agora, é uma condição verificável em qualquer
+perfil. A banda em $(t,E)$ era conhecida qualitativamente; o que é novo é que a
+estrutura do progenitor a \emph{prediz}.
+
+\medskip
+Uma alegação estreita e defensável vale mais que uma ampla e frágil. Boa parte
+do trabalho de um projeto é descobrir qual é a sua.
+\end{nota}
+
+\section{Direções abertas}
+
+\subsection{Matéria estocástica: a distribuição, não a média}
+
+O pipeline da comunidade não propaga sabor --- propaga fluxos e aplica uma
+constante. Quando a densidade tem flutuações estocásticas, a grandeza de
+interesse não é a média da conversão, é a \emph{distribuição} dela sobre
+realizações.
+
+E há um número que torna isso urgente: o vazamento é
+\textbf{fortemente não auto-promediante}. Sobre realizações independentes de
+turbulência, a dispersão é $134\%$ da média. Uma única travessia não amostra o
+ensemble; efeitos absolutos convergem apenas como $N^{-1/2}$ a partir de uma
+distribuição larga.
+
+\begin{conceito}
+\rotuloc{a vantagem, e ela é incomum}
+Quase todo grupo que estuda isso usa código de oscilação que consome um perfil
+tabelado. O GHOST propaga o estado com um hamiltoniano que ele mesmo monta, e
+pode gerar o perfil estocástico \emph{dentro} do laço. Rodar mil realizações é
+uma varredura, não um projeto.
+\end{conceito}
+
+\subsection{Coerência através de um choque real}
+
+Se um neutrino cruza duas frentes, as fases sobrevivem entre elas? A resposta
+medida foi \textbf{não}: os pacotes se separam por 853 a 2460 vezes sua própria
+largura. Mas o portão que respondeu isso usou perfis idealizados, e a
+generalização para geometria real é uma questão em aberto.
+
+\subsection{Setor escuro: um potencial de matéria a mais}
+\label{sec:setor-escuro}
+
+Os modelos que explicam a anomalia do MiniBooNE com um lépton neutro pesado $N$
+e um fóton escuro $Z'$ têm massas na faixa de dezenas de MeV --- justamente a
+escala térmica do núcleo proto-estrela de nêutrons. Supernovas são, portanto,
+laboratório natural para eles, e a pergunta é o que disso cabe aqui.
+
+A resposta é desigual, e a maior parte não cabe.
+
+\paragraph{Resfriamento, fora.} Produção de $N$ por \emph{upscattering} térmico,
+opacidade, aprisionamento, neutrinosfera escura, integral de perda contra o
+critério de Raffelt. É transporte, não propagação --- mesma categoria da
+auto-interação $\nu$--$\nu$. E há um argumento numérico que fecha a porta: para
+$m_N \sim 50$--150~MeV, $\Delta m^2 \sim 10^{15}$--$10^{16}$~eV$^2$ e o
+comprimento de oscilação ativo-estéril cai para \textbf{11 a 99 femtômetros},
+menor que um núcleo atômico. A oscilação está infinitamente promediada, a
+probabilidade é a constante $|U_{\mu4}|^2$, e o propagador pediria
+$K\sim10^{20}$ termos. Aqui a fase rápida não é um incômodo: é o conteúdo
+inteiro.
+
+\paragraph{Decaimento fora da estrela, fora.} Raios $\gamma$, deposição no
+envelope, linha de 511~keV, DSNB. Cinemática de decaimento e transporte
+radiativo.
+
+\paragraph{O que cabe.} Se o $Z'$ mistura cineticamente com o fóton, ele acopla
+ao elétron com $g_e = \varepsilon e$; e o neutrino ativo herda acoplamento ao
+$Z'$ por duas inserções de mistura, $g_\nu = g_D |U_{\mu4}|^2$. Troca de $Z'$
+entre $\nu$ e elétron dá \textbf{um potencial de matéria coerente novo} --- um
+termo diagonal a mais na equação~\eqref{eq:hamiltoniano}, exatamente a forma
+que o módulo já sabe montar. Em unidades do potencial padrão,
+\begin{equation}
+  \varepsilon_{\rm NSI} \;=\;
+    \frac{g_D\,|U_{\mu4}|^2\;\varepsilon\,e}{2\sqrt{2}\,G_F\,m_{Z'}^2}.
+\label{eq:eps-nsi}
+\end{equation}
+
+\textbf{E o potencial cai na entrada $\mu\mu$}, não na $ee$, porque é o $\nu_\mu$
+que mistura com o $N$. Isso importa: um termo em $\mu\mu$ não é degenerado com
+reescalar $\rho$, e desloca a condição de ressonância de um jeito que nenhuma
+mudança de densidade imita.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{loglogaxis}[
+  width=12.4cm, height=6.4cm,
+  xlabel={$m_{Z'}$ (MeV)}, ylabel={$\varepsilon_{\rm NSI} = V_{Z'}/V_{\rm CC}$},
+  xmin=5, xmax=200, ymin=1e-5, ymax=2,
+  grid=major, grid style={linha, line width=0.4pt},
+  tick label style={font=\sffamily\scriptsize, color=grafite},
+  label style={font=\sffamily\small, color=tinta},
+  axis line style={grafite},
+  legend style={font=\sffamily\scriptsize, draw=linha, fill=papel,
+    at={(0.02,0.03)}, anchor=south west},
+]
+% faixa "poucos %" de Esteban-Pretel et al. 2007
+\addplot[draw=none, fill=cyanescuro, fill opacity=0.13, forget plot]
+  coordinates {(5,0.01) (200,0.01) (200,0.05) (5,0.05)} \closedcycle;
+% sensibilidade do DUNE citada por Jana & Porto 2024
+\addplot[goldescuro, densely dashed, line width=1.1pt, forget plot,
+         domain=5:200]{0.1};
+% curvas, com |U_mu4|^2 = 1e-6
+\addplot[anilescuro, line width=1.3pt, domain=5:200, samples=120]{32.539/(x^2)};
+\addlegendentry{$\alpha_D=1{,}0$, $\varepsilon=10^{-3}$}
+\addplot[cyanescuro, line width=1.3pt, domain=5:200, samples=120]{23.009/(x^2)};
+\addlegendentry{$\alpha_D=0{,}5$, $\varepsilon=10^{-3}$}
+\addplot[goldescuro, line width=1.3pt, domain=5:200, samples=120]{10.290/(x^2)};
+\addlegendentry{$\alpha_D=0{,}1$, $\varepsilon=10^{-3}$}
+\addplot[grafite, line width=1.1pt, densely dotted, domain=5:200, samples=120]{2.301/(x^2)};
+\addlegendentry{$\alpha_D=0{,}5$, $\varepsilon=10^{-4}$}
+\node[anchor=west, font=\sffamily\scriptsize, text=cyanescuro, fill=papel,
+      inner sep=1.5pt] at (axis cs:33,0.024)
+  {``poucos \%'': Esteban-Pretel+ 2007};
+\node[anchor=west, font=\sffamily\scriptsize, text=goldescuro, fill=papel,
+      inner sep=1.5pt] at (axis cs:33,0.155)
+  {DUNE $\mathcal{O}(0{,}1)$: Jana \& Porto 2024};
+\end{loglogaxis}
+\end{tikzpicture}
+\caption{O mapeamento que a literatura não tem. Equação~\eqref{eq:eps-nsi} sobre
+a região de parâmetros que explica o MiniBooNE, com $|U_{\mu4}|^2 = 10^{-6}$,
+contra os dois marcos já publicados. Para $m_{Z'}\lesssim 10$--$20$~MeV as
+curvas cruzam a sensibilidade declarada do DUNE. \textbf{Esta figura é uma
+estimativa, não um resultado}: a estrutura de acoplamento é dependente de
+modelo, e os avisos da página seguinte valem inteiros.}
+\label{fig:eps-nsi}
+\end{figure}
+
+\subsubsection*{O que a literatura já ocupou}
+
+\begin{center}
+\begin{tabular}{@{}>{\small}p{6.5cm} >{\small}p{6.0cm}@{}}
+\toprule
+\small\bfseries Trabalho & \small\bfseries O que faz \\
+\midrule
+\textbf{Esteban-Pretel, Tomás \& Valle 2007} \newline arXiv:0704.0032
+  & NSI na propagação pelo envelope, em três sabores, com conversão ressonante
+    induzida por NSI \textbf{e passagem da onda de choque}. O efeito aparece
+    para ``NSI não-universais de poucos \%''. \\
+Esteban-Pretel, Tomás \& Valle 2009 \newline arXiv:0909.2196
+  & o mesmo, em interação com efeitos coletivos. \\
+\textbf{Jana \& Porto 2024} \newline arXiv:2407.06251
+  & NSI inverte os níveis de matéria e induz nova ressonância perto da
+    protoestrela; DUNE sensível a $\mathcal{O}(0{,}1)$ pelo pico de
+    neutronização, com ambiguidade de ordenamento. \\
+Dutta \& Karthikeyan 2025 (2508.16558); Das \& Reno 2025 (2508.16510)
+  & a variante escalar, por dois grupos no mesmo mês. \\
+Chang, Essig \& McDermott 2016 (1611.03864) e 2018 (1803.00993)
+  & vínculos de resfriamento da SN 1987A para fótons escuros e setores escuros
+    sub-GeV. \\
+Akita, Im, Masud \& Yun 2023 \newline arXiv:2312.13627
+  & limites sobre \textbf{HNL, $Z'$ e majorons} vindos de neutrinos de alta
+    energia da SN 1987A --- a via de decaimento, feita. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{alerta}
+\rotuloa{o que NÃO é novidade, e cobra caro se apresentado como tal}
+``NSI de poucos \% altera dramaticamente a conversão de sabor no envelope,
+inclusive via passagem do choque'' é de \textbf{2007}. A magnitude que a
+equação~\eqref{eq:eps-nsi} entrega na região do MiniBooNE é justamente essa. Se
+isso for proposto como achado, será corrigido em referee --- e com razão.
+\end{alerta}
+
+\begin{nota}
+\rotulo{onde parece haver espaço}
+Três buscas no INSPIRE voltaram vazias: \cmd{"heavy neutral lepton" + supernova
++ "flavor conversion"}; \cmd{"kinetic mixing" + neutrino + "matter effect" +
+resonance}; e \cmd{"non-standard interactions" + supernova +
+"three-dimensional"}. Ausência em busca não é prova de ausência, mas o padrão é
+consistente: \textbf{as duas literaturas --- a do MiniBooNE e a de NSI em
+supernova --- não se falam.}
+
+\medskip
+O que sobra é estreito e defensável: (i) o \textbf{mapeamento} do espaço de
+parâmetros do MiniBooNE para $\varepsilon_{\rm NSI}$, que é uma figura, não um
+projeto; e (ii) o tratamento \textbf{3D raio a raio com a frente afiada}, que
+ninguém fez para NSI nem para mais nada --- e que é exatamente a vantagem que
+este código já demonstrou ter.
+\end{nota}
+
+\begin{alerta}
+\rotuloa{três coisas a conferir antes de escrever qualquer coisa}
+A equação~\eqref{eq:eps-nsi} é estimativa. Confira contra o lagrangiano do
+artigo que estiver seguindo:
+\begin{enumerate}
+\item \textbf{a estrutura de acoplamento.} Foi usado
+  $g_\nu = g_D|U_{\mu4}|^2$. Se for $|U_{\mu4}|$ ou $|U_{\mu4}|^4$, o resultado
+  anda ordens de grandeza;
+\item \textbf{o sinal}, que decide se a ressonância sobe ou desce em densidade;
+\item \textbf{a convenção do operador de quatro férmions.} Foi usado
+  $2\sqrt2\,G_F$ como referência; um fator 2 aqui é um fator 2 na figura.
+\end{enumerate}
+\end{alerta}
+
+\paragraph{Custo de implementar.} Pequeno, e é o que torna a direção
+atraente. O \cmd{dae\_nu\_hamiltoniano} já soma um termo diagonal proporcional
+a $Y_e\rho$; acrescentar um segundo, com constante própria e índice de sabor
+vindo do \cmd{spec.json}, é da ordem de trinta linhas mais um teste. Perfis,
+fatiamento adaptativo, Gershgorin e observáveis não mudam. O que o GHOST
+\textbf{nunca} vai fazer é a produção: ele não dirá quantos $N$ nascem no
+núcleo.
+
+\subsection{Gravidade como decoerência}
+
+Esta é a única rota gravitacional que cruza com o eixo do projeto sem exigir
+estrutura de Dirac. Em vez de perguntar como a gravidade muda a \emph{fase} de
+oscilação --- onde a resposta é ``quase nada'' ---, pergunta-se como ela a
+\emph{destrói}.
+
+O dissipador proposto na literatura é defasagem pura na base de sabor, que é
+exatamente o que \cmd{core/dae\_traj.c} já implementa. A base de colapso do
+núcleo \emph{já é} a certa.
+
+\begin{alerta}
+\rotuloa{e a magnitude é implacável}
+Com os números do modelo baseado em curvatura --- $\Gamma \propto \alpha\,
+\tau_c\sqrt{K}$, com $K$ o escalar de Kretschmann, dando $\Gamma \propto GM/r^3$:
+\begin{center}
+\begin{tabular}{@{}>{\small}l >{\small}r@{}}
+$L_{\rm coh} = 1/\Gamma$ & $10^{30}$ m \\
+raio de Hubble & $1{,}32\times10^{26}$ m \\
+\textbf{razão} & \textbf{7572$\times$ o raio de Hubble} \\
+contra decoerência de pacote de onda & $3\times10^{25}$ vezes mais fraca \\
+\end{tabular}
+\end{center}
+Como fenomenologia astrofísica, o efeito é \textbf{inobservável por dezenas de
+ordens de grandeza}. Isso não é crítica ao trabalho --- é o que ele mesmo diz.
+\end{alerta}
+
+Vale registrar, porém, que esse veredito é sobre \emph{um} mecanismo. Um modelo
+diferente --- acoplamento a um ambiente estocástico de ondas gravitacionais via
+gravitação linearizada --- dá $\Gamma_{ij}\sim \Delta m^4_{ij} E^{-2}$, que
+depende da energia, ao contrário do anterior. Se o veredito se transfere é
+pergunta aberta, e é barata de responder: o dissipador já está implementado, é
+trocar $\Gamma(E)$ e recalcular.
+
+\section{O que está fora, e por quê}
+
+Registrado para não ser redescoberto.
+
+\begin{center}
+\begin{tabular}{@{}>{\sffamily\small}p{4.7cm} >{\small}p{8.0cm}@{}}
+\toprule
+\sffamily\bfseries\small Ideia & \small\bfseries Veredito \\
+\midrule
+auto-interação $\nu$--$\nu$ (oscilação coletiva, FFC, MNR)
+  & \textbf{FORA.} O hamiltoniano é \emph{não-linear}; é outra equação, não
+    outro $H$. Ferramenta certa: \cmd{COSE}$\nu$. \\
+neutrino como caminhante no espaço (Dirac)
+  & \textbf{FORA.} Exige moeda e espaço de espinor; a literatura faz isso com
+    caminhadas de tempo discreto. \\
+espaço-tempo curvo, efeito na \emph{fase}
+  & Quase nulo. Para trajetória radial os termos gravitacionais
+    \emph{se cancelam}. \\
+inversão de spin gravitacional
+  & Não existe para ultrarrelativísticos; quem vira o spin é o campo magnético. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Resultados negativos, guardados}
+
+Quatro coisas que se esperava encontrar e não se encontrou. Esta seção existe
+porque um resultado negativo registrado vale tempo de alguém.
+
+\begin{center}
+\begin{tabular}{@{}>{\small}p{7.2cm} >{\small}p{5.4cm}@{}}
+\toprule
+\small\bfseries Hipótese & \small\bfseries Desfecho \\
+\midrule
+a turbulência importa na amplitude que os modelos reais exibem
+  & \textbf{não}: $3{,}9\times10^{-3}$ de $P_{\rm inc}(\nue)$ \\
+a coerência de fase sobrevive entre travessias múltiplas do choque
+  & \textbf{não}: pacotes se separam por 853--2460$\times$ sua largura \\
+o limiar de amplitude seria nosso
+  & \textbf{não}: Kneller \& Volpe o tinham antes \\
+o afiamento da frente seria proposta nova
+  & \textbf{não}: prática estabelecida desde 2004 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{conceito}
+\rotuloc{a disciplina de duvidar do próprio código}
+O \cmd{CONVENTIONS.md} traz quatro regras que não são sobre grafos nem sobre
+neutrinos, e sim sobre não mentir no resultado:
+
+\smallskip
+\textbf{Anti-vacuidade} --- um teste que passa trivialmente não é um teste.\\
+\textbf{Ausência precisa de sonda que enxerga} --- só se pode afirmar que algo
+não está lá se o instrumento o veria se estivesse.\\
+\textbf{Toda comparação declara a sua resolução.}\\
+\textbf{Dois métodos, um deles só para auditar o outro.}
+
+\medskip
+São essas regras, e não o propagador, que fazem o projeto valer.
+\end{conceito}
+
+\section{Os limites honestos}
+
+Não há hidrodinâmica de supergigante vermelha. O argumento do núcleo de hélio e
+o intervalo de progenitores são um argumento e um intervalo, não um cálculo. Não
+é possível dar $\PH$ para uma supergigante vermelha, porque o termo bruto exige
+uma simulação que não existe no conjunto usado.
+
+E a pergunta final --- isto é um erro, ou algo que o DUNE pode \emph{medir}? --- tem
+resposta honesta: \textbf{ainda não}. Três coisas bloqueiam. O viés é degenerado
+com o espectro da fonte; $\PH$ precisa do modelo de fluxo que se está ajustando;
+e a estatística de uma única supernova galáctica não separa as duas coisas.

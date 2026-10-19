@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Daedalus">
+  <title>Daedalus</title>
+  <rect width="512" height="512" rx="112" fill="#101A24"/>
+  <g transform="translate(56 56) scale(4)">
+    <path d="M19 19 V81 M19 19 H81 V81 H19 M19 34.5 H65.5 V65.5 H19 M19 50 H50"
+          fill="none" stroke="#F3EFE5" stroke-width="8" stroke-linecap="square" stroke-linejoin="miter"/>
+    <g fill="#E5A83F">
+      <circle cx="81" cy="19" r="5.5"/>
+      <circle cx="65.5" cy="65.5" r="5.5"/>
+    </g>
+  </g>
+</svg>

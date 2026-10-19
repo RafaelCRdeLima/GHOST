@@ -1,0 +1,142 @@
+import type { Catalog } from './types.ts';
+
+export const it: Catalog = {
+  modo_local: () => 'Laboratorio · locale',
+  modo_reimportado: () => 'Reimportato',
+  impl_c: () => 'nucleo C',
+  impl_wolfram: () => 'Wolfram',
+  impl_desconhecida: () => 'origine non dichiarata',
+
+  sec_gerador: () => 'Generatore',
+  sec_hamiltoniano: () => 'Hamiltoniana',
+  sec_tempo: () => 'Tempo',
+  sec_sitios: () => 'Siti',
+  sec_exportar: () => 'Esporta',
+  sec_varredura: () => 'Scansione',
+  sec_reimportar: () => 'Reimporta',
+
+  ger_microtubule: () => 'microtubulo',
+  ger_sbm: () => 'modello a blocchi stocastici',
+  ger_path: () => 'catena',
+  ger_cycle: () => 'ciclo',
+  ger_grid2d: () => 'griglia 2D',
+  ger_hypercube: () => 'ipercubo',
+  ger_complete: () => 'completo',
+
+  c_npar: () => 'N∥',
+  c_nperp: () => 'N⊥',
+  c_costura: () => 'cucitura',
+  c_fechar: () => 'chiudere le estremità',
+  c_acoplamento: () => 'j∥ / j⊥',
+  c_modulos: () => 'moduli',
+  c_n: () => 'N',
+  c_pinpout: () => 'p_in / p_out',
+  c_religacao: () => 'ricablaggio p',
+  c_religar_fixo: () => 'ricablare mantenendo |E| fisso',
+  c_semente: () => 'seme',
+  c_gamma: () => 'γ',
+  c_normalizacao: () => 'normalizzazione di ‖H‖',
+  c_tfinal: () => 't finale',
+  c_pontos: () => 'punti nel tempo',
+  c_realizacoes: () => 'realizzazioni',
+  c_passos: () => 'passi in p',
+
+  c_passo_quadro: () => 'passo della mappa',
+  q_quadros: (p) => `${p['k']} fotogrammi · ${p['mb']} MB`,
+  q_incompleto: (p) => `animazione ferma a ${p['tem']} di ${p['esperado']} fotogrammi`,
+  ham_adjacency: () => 'Adiacenza',
+  ham_laplacian: () => 'Laplaciano',
+  norm_spectral: () => 'raggio spettrale',
+  norm_mean_degree: () => 'grado medio',
+  norm_none: () => 'nessuna',
+
+  a_gerar: () => 'costruisci la rete',
+  a_propagar: () => 'propaga',
+  a_propagando: () => 'propagazione…',
+  a_parar: () => 'ferma',
+  a_escala_fixa: () => 'scala fissa',
+  a_varrer: () => 'scansiona',
+  a_csv: () => 'risultati in CSV',
+  a_abrir_csv: () => 'apri un CSV dal cluster',
+  a_limpar_alvo: () => 'azzera il bersaglio',
+
+  s_inicial: (p) => `iniziale ${p['j']}`,
+  s_alvo: (p) => `bersaglio ${p['j']}`,
+  s_dica: () => 'Clicca sulla mappa per fissare il sito selezionato qui sopra.',
+
+  av_acrescentar: () =>
+    'Aggiungere archi aumenta |E| e migliora il trasporto in modo banale: il '
+    + 'risultato misura allora il numero di archi, non la topologia.',
+  av_sem_normalizar: () =>
+    'Senza normalizzare, "più coerenza" può essere soltanto "hopping più grande" '
+    + 'quando si confrontano topologie diverse.',
+  av_nao_lattice: () =>
+    'Questo grafo non ha un reticolo srotolato: la mappa mostra i siti in ordine '
+    + 'di indice, ripiegati in righe. Non è la geometria del grafo.',
+  av_exportar: () =>
+    'Il C++ è autonomo e ricostruisce la rete dal spec.json. Wolfram e Python '
+    + "ricevono la lista degli archi e fanno da oracolo del propagatore.",
+  av_sem_procedencia: () =>
+    'Questo CSV non ha intestazione di provenienza (#! spec e #! core_hash). Non '
+    + 'si può sapere quale simulazione descriva, quindi non verrà tracciato.',
+  av_hash_diferente: (p) =>
+    `Questo risultato viene dal nucleo ${p['arquivo']}; qui gira il ${p['atual']}. `
+    + 'I numeri restano validi, ma questo binario non può riprodurli — per farlo, '
+    + 'usa quella versione del nucleo.',
+  av_spec_invalido: (p) => `Il spec.json incorporato nel CSV non supera il parser: ${p['erro']}`,
+  av_reimportado: (p) => `${p['arquivo']} · ${p['linhas']} passi`,
+  av_scrub_grande: () => 'rete grande: solo dal vivo, senza tornare indietro',
+
+  r_norma: () => 'Σ|ψ|²',
+  r_vertices: (p) => `${p['n']} vertici`,
+  r_arestas: (p) => `${p['m']} archi`,
+  r_grau: () => '⟨d⟩',
+  r_lambda2_alto: () => 'non convergito · limite superiore',
+  r_componentes: (p) => `${p['k']} componenti`,
+  r_duplicadas: (p) => `${p['k']} duplicati scartati`,
+  r_religacoes: (p) => `${p['k']} ricablaggi senza bersaglio libero`,
+
+  f_iniciando: () => 'avvio',
+  f_gerando: () => 'costruzione della rete',
+  f_pronta: () => 'rete pronta',
+  f_propagando: () => 'propagazione',
+  f_pronto: () => 'fatto',
+  f_cancelado: () => 'annullato',
+  f_erro: () => 'errore',
+  f_varrendo: (p) => `scansione ${p['i']}/${p['n']}`,
+
+  sec_vista: () => 'Vista',
+  v_desenrolada: () => 'reticolo srotolato',
+  v_espectral: () => 'disposizione spettrale',
+  v_propria: () => 'geometria del generatore',
+  v_espectral_dica: () => 'Autovettori 2 e 3 della laplaciana come coordinate. Per una rete modulare i moduli si separano nel piano.',
+  v_tubo: () => 'Tubo 3D',
+  v_tubo_dica: () => 'Trascina per ruotare. La cucitura non appare come una cicatrice perché l’immersione è elicoidale: ogni legame laterale ha la stessa lunghezza, compreso il suo. La cucitura è una discontinuità di reticolo — contatto α–α dove il resto ha α–β — non di forma.',
+  v_tubo_fechado: () => 'Con il tubo chiuso longitudinalmente, i legami che uniscono le due estremità attraversano il cilindro nel disegno: il grafo è periodico, il cilindro non può esserlo.',
+  v_tubo_metrico: () => 'scala metrica',
+  v_tubo_escala: (p) => `Asse compresso ×${p['fator']}: lungo il tubo le distanze NON sono nella stessa scala di quelle laterali. Un microtubulo è troppo lungo per stare in scala — a ×1 la scala è vera e il tubo diventa un capello.`,
+  sec_trajetorias: () => 'traiettorie',
+  tr_desligado: () => 'spento',
+  tr_n: () => 'traiettorie',
+  tr_gamma: () => 'γ defasamento',
+  tr_stride: () => 'campionamento di ρ',
+  tr_amostras: () => 'campioni',
+  tr_rho: () => 'accumulare ρ',
+  tr_psi: () => 'archiviare ψ',
+  tr_por_thread: () => 'per thread',
+  tr_por_celula: () => 'per cella',
+  tr_plano: () => 'sul piano da 100',
+  tr_sem_modo_curto: () => 'senza modo',
+  tr_rho_quando: () => 'ρ viene sommato durante l’esecuzione e ogni ψ scartato. Da scegliere per una scansione ampia, con gli osservabili già definiti.',
+  tr_psi_quando: () => 'i ψ vengono scritti e ρ è montato in analisi. Da scegliere finché la definizione dell’osservabile può ancora cambiare.',
+  tr_sem_modo: () => 'Scegli uno dei due. Non c’è un valore predefinito: risolvono problemi diversi, e chi ha scelto di accumulare ρ e poi ha cambiato la definizione dell’osservabile non ha più i ψ per ricalcolare.',
+  v_sem_espectral: () => 'rete troppo grande per la disposizione spettrale',
+  v_sem_arestas: () => 'archi nascosti oltre 2000 vertici',
+  se_ipr: () => 'IPR',
+  se_coerencia: () => 'coerenza ℓ₁',
+  se_palvo: () => 'p al bersaglio',
+  se_passo: () => 'passo',
+  v_eixo: () => 'p (frazione ricablata)',
+  v_media: () => 'p̄ al bersaglio (media ± dev. std.)',
+  v_dica: () => 'Le scansioni piccole girano qui. Per quelle lunghe, esporta il C++ con realizzazioni.',
+};

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+native/build/
+wasm/build/
+src/export/recursos.gerado.ts
+*.o
+*.wasm
+*.core
+
+# Python
+__pycache__/
+*.pyc

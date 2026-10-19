@@ -1,0 +1,161 @@
+% ---------------------------------------------------------------------------
+% Preâmbulo da apostila do GHOST.
+% Fontes da identidade visual em fontes/.
+% Compilar com XeLaTeX.
+% ---------------------------------------------------------------------------
+
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\usepackage{polyglossia}
+\setdefaultlanguage{portuguese}
+
+\usepackage[a4paper,top=2.7cm,bottom=2.6cm,left=2.9cm,right=2.9cm,
+            headsep=1.0cm,footskip=1.3cm]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{calc,positioning,arrows.meta,decorations.pathreplacing,
+                shapes.geometric,backgrounds,fit,patterns}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{caption}
+\usepackage[hidelinks]{hyperref}
+
+% ------------------------------------------------------------------ paleta
+\definecolor{navy}{HTML}{071B2C}
+\definecolor{navyfundo}{HTML}{04121E}
+\definecolor{cyan}{HTML}{8DD7DC}
+\definecolor{gold}{HTML}{E6B75C}
+\definecolor{areia}{HTML}{F6F3EC}
+\definecolor{anil}{HTML}{A9AEF0}
+% derivadas, para tinta sobre papel claro
+\definecolor{tinta}{HTML}{10222F}
+\definecolor{cyanescuro}{HTML}{1F6B73}
+\definecolor{goldescuro}{HTML}{9A6F1E}
+\definecolor{anilescuro}{HTML}{4A4FA8}
+\definecolor{grafite}{HTML}{5C6B74}
+\definecolor{linha}{HTML}{D6DDD8}
+\definecolor{papel}{HTML}{FBFAF6}
+
+% ------------------------------------------------------------------ fontes
+\newcommand{\FONTES}{fontes/}
+\setmainfont{Newsreader-Regular.ttf}[
+  Path            = \FONTES,
+  ItalicFont      = Newsreader-Italic.ttf,
+  BoldFont        = Newsreader-SemiBold.ttf,
+  BoldItalicFont  = Newsreader-SemiBoldItalic.ttf,
+  Ligatures       = TeX ]
+\setsansfont{Manrope-Regular.ttf}[
+  Path            = \FONTES,
+  ItalicFont      = Manrope-Regular.ttf,
+  BoldFont        = Manrope-SemiBold.ttf,
+  BoldItalicFont  = Manrope-SemiBold.ttf,
+  Ligatures       = TeX ]
+\setmonofont{DMMono-Regular.ttf}[
+  Path            = \FONTES,
+  ItalicFont      = DMMono-Italic.ttf,
+  BoldFont        = DMMono-Medium.ttf,
+  BoldItalicFont  = DMMono-MediumItalic.ttf,
+  Scale           = 0.86 ]
+\newfontfamily\displayfont{Newsreader-Display.ttf}[Path=\FONTES, Ligatures=TeX]
+\newfontfamily\manropelight{Manrope-Light.ttf}[Path=\FONTES]
+\newfontfamily\manropemed{Manrope-Medium.ttf}[Path=\FONTES]
+
+% Newsreader e DM Mono nao trazem gregas: toda letra grega vem da fonte
+% matematica, em modo matematico. Nunca escreva "ν" no texto corrido.
+\setmathfont{STIXTwoMath-Regular.otf}
+
+% ------------------------------------------------------------------ titulos
+\titleformat{\chapter}[display]
+  {\sffamily\bfseries\color{tinta}}
+  {\manropelight\fontsize{54}{54}\selectfont\color{cyanescuro}\thechapter}
+  {6pt}
+  {\fontsize{25}{29}\selectfont\raggedright}
+  [{\vspace{4pt}\color{gold}\rule{4.2cm}{2pt}}]
+\titlespacing*{\chapter}{0pt}{0pt}{34pt}
+
+\titleformat{\section}{\sffamily\bfseries\large\color{tinta}}{\thesection}{0.7em}{}
+\titlespacing*{\section}{0pt}{2.6ex plus .6ex}{1.0ex}
+\titleformat{\subsection}{\sffamily\bfseries\normalsize\color{cyanescuro}}{\thesubsection}{0.6em}{}
+\titlespacing*{\subsection}{0pt}{2.0ex plus .4ex}{0.6ex}
+
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{1}
+
+% ------------------------------------------------------------------ corpo
+\setlength{\parskip}{0.55ex}
+\setlength{\parindent}{1.1em}
+\renewcommand{\arraystretch}{1.24}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.3ex, topsep=0.6ex, label=\color{cyanescuro}\textbullet}
+\setlist[enumerate]{leftmargin=1.5em, itemsep=0.4ex, topsep=0.6ex}
+\setlist[description]{leftmargin=0pt, font=\sffamily\bfseries\color{tinta}}
+
+% Figuras devem ficar perto do texto que as explica: numa apostila, uma
+% figura que migra tres paginas deixa de ser a figura daquele paragrafo.
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.06}
+\renewcommand{\floatpagefraction}{0.80}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+
+\captionsetup{font={sf,small}, labelfont={bf,color=cyanescuro}, width=0.92\linewidth}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\sffamily\scriptsize\color{grafite}\textsc{ghost}}
+\fancyhead[R]{\sffamily\scriptsize\color{grafite}\nouppercase{\leftmark}}
+\fancyfoot[C]{\sffamily\small\color{grafite}\thepage}
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}%
+  \fancyfoot[C]{\sffamily\small\color{grafite}\thepage}}
+
+\hypersetup{colorlinks=true, linkcolor=cyanescuro, urlcolor=cyanescuro,
+  pdftitle={GHOST -- uma apostila para comecar},
+  pdfsubject={Oscilacao de neutrinos: sabor, materia e decoerencia},
+  pdfauthor={Rafael C. R. de Lima}}
+
+% ------------------------------------------------------------------ caixas
+\newtcolorbox{nota}[1][]{
+  enhanced, colback=papel, colframe=linha, boxrule=0.5pt,
+  arc=1.5pt, left=9pt, right=9pt, top=7pt, bottom=7pt,
+  borderline west={2.2pt}{-2.2pt}{cyanescuro}, #1}
+
+\newtcolorbox{alerta}[1][]{
+  enhanced, colback=papel, colframe=linha, boxrule=0.5pt,
+  arc=1.5pt, left=9pt, right=9pt, top=7pt, bottom=7pt,
+  borderline west={2.2pt}{-2.2pt}{goldescuro}, #1}
+
+\newtcolorbox{conceito}[1][]{
+  enhanced, colback=navy, colframe=navy, boxrule=0pt,
+  arc=2pt, left=11pt, right=11pt, top=9pt, bottom=9pt,
+  coltext=areia, fontupper=\linespread{1.15}\selectfont, #1}
+
+% rótulo de caixa
+\newcommand{\rotulo}[1]{{\sffamily\bfseries\footnotesize\color{cyanescuro}\MakeUppercase{#1}}\par\vspace{2pt}}
+\newcommand{\rotuloa}[1]{{\sffamily\bfseries\footnotesize\color{goldescuro}\MakeUppercase{#1}}\par\vspace{2pt}}
+\newcommand{\rotuloc}[1]{{\sffamily\bfseries\footnotesize\color{cyan}\MakeUppercase{#1}}\par\vspace{2pt}}
+
+% ------------------------------------------------------------------ atalhos
+\newcommand{\nue}{\nu_e}
+\newcommand{\numu}{\nu_\mu}
+\newcommand{\nutau}{\nu_\tau}
+\newcommand{\Losc}{L_{\text{osc}}}
+\newcommand{\PH}{P_H}
+\newcommand{\dm}[1]{\Delta m^2_{#1}}
+\newcommand{\cmd}[1]{{\ttfamily #1}}
+\newcommand{\ket}[1]{\left|#1\right\rangle}
+\newcommand{\bra}[1]{\left\langle#1\right|}
+\newcommand{\braket}[2]{\left\langle#1\middle|#2\right\rangle}
+
+% Espacejamento de letras: no XeLaTeX vem do fontspec, nao do microtype.
+\newfontfamily\espacejada{Manrope-SemiBold.ttf}[Path=\FONTES, LetterSpace=22.0]
