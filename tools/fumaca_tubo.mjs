@@ -59,7 +59,7 @@ await cmd('Page.navigate', { url: URL_ALVO });
 /* 1. O aplicativo fica pronto na vista padrao. */
 let pronto = false;
 for (let i = 0; i < 120 && !pronto; ++i) {
-  pronto = await aval(`!!document.body && /pronto/.test(document.body.innerText)`);
+  pronto = await aval(`/pronto|done|terminé|fatto/.test(document.querySelector('footer')?.innerText ?? '')`);
   if (!pronto) await dorme(500);
 }
 if (!pronto) fim(1, 'FALHA: o aplicativo nao ficou pronto');
@@ -67,7 +67,7 @@ if (!pronto) fim(1, 'FALHA: o aplicativo nao ficou pronto');
 /* 2. Trocar para a vista do tubo. */
 const trocou = await aval(`(() => {
   const b = [...document.querySelectorAll('.vistas button')]
-    .find((x) => /tubo/i.test(x.textContent || ''));
+    .find((x) => /tub[oe]/i.test(x.textContent || ''));
   if (!b) return 'sem botao';
   b.click(); return 'ok';
 })()`);

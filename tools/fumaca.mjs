@@ -17,7 +17,7 @@ const ALVO = process.argv[2] ?? 'http://localhost:4173/';
 
 const EXPR = `(() => {
   const f = document.querySelector('footer')?.innerText ?? '';
-  if (!/pronto/.test(f)) return false;
+  if (!/pronto|done|terminé|fatto/.test(f)) return false;
   /* O rodape mostra o desvio da norma como (Δ x): e o diagnostico permanente
      de CONVENTIONS.md 10.3, e o teste le exatamente o que o usuario le. */
   const m = f.match(/Δ ([0-9.eE+-]+)/);
